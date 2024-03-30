@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 8814454597551379879}
   - component: {fileID: 787523263648479011}
   m_Layer: 0
-  m_Name: Player
+  m_Name: Host
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -48,9 +48,9 @@ MonoBehaviour:
   unitName: Host
   physicalDamage: 5
   magicalDamage: 0
-  maxPhysicalHP: 20
+  maxPhysicalHP: 50
   maxMagicalHP: 0
-  currentPhysicalHP: 20
+  currentPhysicalHP: 50
   currentMagicalHP: 0
 --- !u!1 &4427322185094172406
 GameObject:
