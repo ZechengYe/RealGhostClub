@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
@@ -12,13 +13,29 @@ public class BattleHUD : MonoBehaviour
     public TextMeshProUGUI physicalHPtext;
     public TextMeshProUGUI magicalHPtext;
 
+    public Unit currentUnit;
+
+    public void Start()
+    {
+        //NS: this part needs work...how to find the specific instantiated Object?
+        currentUnit = GameObject.Find("Boss(Clone)").GetComponent<Unit>();
+    }
+    
+    public void Update()
+    {
+        SetupHUD(currentUnit);
+    }
+
     public void SetupHUD(Unit unit)
     {
-        nameText.text = unit.unitName;
-        physicalDamageText.text = unit.physicalDamage.ToString();
-        magicalDamageText.text = unit.magicalDamage.ToString();
-        physicalHPtext.text = unit.currentPhysicalHP.ToString();
-        magicalHPtext.text = unit.currentMagicalHP.ToString();
+        unit = currentUnit;
+        
+        nameText.text = "Name: " + unit.unitName;
+        physicalDamageText.text = "Phys DMG: " + unit.physicalDamage;
+        magicalDamageText.text = "MP DMG: " + unit.magicalDamage;
+        physicalHPtext.text = "Phys HP: " + unit.currentPhysicalHP;
+        magicalHPtext.text = "MP HP: " +  unit.currentMagicalHP;
     }
+
 
 }
