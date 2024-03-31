@@ -13,12 +13,15 @@ public class BattleHUD : MonoBehaviour
     public TextMeshProUGUI physicalHPtext;
     public TextMeshProUGUI magicalHPtext;
 
+    public GameObject bossObj;
     public Unit currentUnit;
 
     public void Start()
     {
         //NS: this part needs work...how to find the specific instantiated Object?
-        currentUnit = GameObject.Find("Boss(Clone)").GetComponent<Unit>();
+        //VC: I added tags for the Boss, Host and Summon prefabs,
+        //    and wired them up in the GameManager
+        currentUnit = GameManager.instance.boss.GetComponent<Unit>();
     }
     
     public void Update()
