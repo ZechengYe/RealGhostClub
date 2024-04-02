@@ -10,6 +10,7 @@ public class GameManager : MonoBehaviour
     public GameObject boss;
     public GameObject host;
     public GameObject summon;
+    public GameObject sound;
 
     private void Awake()
     {
@@ -45,5 +46,6 @@ public class GameManager : MonoBehaviour
         boss = GameObject.FindGameObjectWithTag("BossUnit");
         host = GameObject.FindGameObjectWithTag("HostUnit");
         summon = GameObject.FindGameObjectWithTag("SummonUnit");
+        sound = GameObject.FindGameObjectWithTag("SoundUnit");
     }
 }

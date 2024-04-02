@@ -7,6 +7,10 @@ TagManager:
   - BossUnit
   - HostUnit
   - SummonUnit
+  - SoundUnit
+  - InternUnit
+  - CameraUnit
+  - DirectorUnit
   layers:
   - Default
   - TransparentFX

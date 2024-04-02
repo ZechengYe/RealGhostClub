@@ -26,7 +26,12 @@ PrefabInstance:
     - target: {fileID: 2129651471537834010, guid: 83548f0b10855cf4c83cec8d3e09ca61,
         type: 3}
       propertyPath: m_Name
-      value: Host Variant
+      value: Director
+      objectReference: {fileID: 0}
+    - target: {fileID: 2129651471537834010, guid: 83548f0b10855cf4c83cec8d3e09ca61,
+        type: 3}
+      propertyPath: m_TagString
+      value: DirectorUnit
       objectReference: {fileID: 0}
     - target: {fileID: 8513901204820888837, guid: 83548f0b10855cf4c83cec8d3e09ca61,
         type: 3}
