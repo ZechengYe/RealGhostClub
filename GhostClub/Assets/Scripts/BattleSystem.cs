@@ -85,7 +85,9 @@ public class BattleSystem : MonoBehaviour
 
         if (inspirationFull == true)
         {
-            SoundInspiration.value = 10;
+            Unit soundUnit = GameManager.instance.sound.GetComponent<Unit>();
+            int inspiration = soundUnit.inspirationBar;
+            SoundInspiration.value = inspiration;
         }
         else
         {
