@@ -1,6 +1,9 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UIElements;
+using UnityEngine.UI;
+using Slider = UnityEngine.UI.Slider;
 
 public enum BattleState { START, BOSSTURN, HOSTTURN, SUMMONTURN, DIRECTORTURN, SOUNDTURN, CAMERATURN, INTERNTURN, WON, LOST }
 
@@ -15,7 +18,10 @@ public class BattleSystem : MonoBehaviour
     public GameObject cameraPrefab;
     public GameObject internPrefab;
     public GameObject bossPrefab;
-
+    
+    //we can seperate the slider code later?
+    public Slider SoundInspiration;
+    
     public Transform hostBattleStation;
     public Transform summonBattleStation;
     public Transform directorBattleStation;
@@ -36,6 +42,7 @@ public class BattleSystem : MonoBehaviour
     private int currentBossHP;
 
     bool inspirationFull = false;
+    
 
     // Update is called once per frame
     void Start()
@@ -74,6 +81,15 @@ public class BattleSystem : MonoBehaviour
         if (state == BattleState.INTERNTURN)
         {
             InternAttack();
+        }
+
+        if (inspirationFull == true)
+        {
+            SoundInspiration.value = 10;
+        }
+        else
+        {
+            SoundInspiration.value = 0;
         }
     }
 
@@ -284,6 +300,7 @@ public class BattleSystem : MonoBehaviour
                 //reset the inspiration bar
                 soundUnit.inspirationBar = 0;
                 inspirationFull = false;
+                
 
                 bool physicalIsDead = bossUnit.TakePhysicalDamage(soundUnit.physicalDamage);
                 bool magicalIsDead = bossUnit.TakeMagicalDamage(soundUnit.magicalDamage);

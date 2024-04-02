@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class Unit : MonoBehaviour
 {
@@ -10,13 +11,12 @@ public class Unit : MonoBehaviour
 
     public int maxPhysicalHP;
     public int maxMagicalHP;
-
+    
     public int currentPhysicalHP;
     public int currentMagicalHP;
 
     public int inspirationBar;
     public int maxInspirationBar;
-    
     public bool TakePhysicalDamage (int physicalDmg)
     {
         currentPhysicalHP -= physicalDmg;
