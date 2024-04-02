@@ -35,6 +35,8 @@ public class BattleSystem : MonoBehaviour
     private int currentPlayerHP;
     private int currentBossHP;
 
+    bool inspirationFull = false;
+
     // Update is called once per frame
     void Start()
     {
@@ -113,7 +115,8 @@ public class BattleSystem : MonoBehaviour
     void BossTurn()
     {
         Debug.Log("It's boss's turn");
-        bool isDead = hostUnit.TakePhysicalDamage(bossUnit.physicalDamage);
+        bool isDead = soundUnit.TakePhysicalDamage(bossUnit.physicalDamage);
+        inspirationFull = soundUnit.UpdateInspirationBar(bossUnit.physicalDamage);
         //check if the character is dead
         if (isDead)
         {
@@ -124,10 +127,10 @@ public class BattleSystem : MonoBehaviour
         }
         else
         {
-            //It should go to host Turn
             state = BattleState.HOSTTURN;
             HostTurn();
         }
+        DamageMonitor();
     }
 
     void HostTurn()
@@ -136,9 +139,6 @@ public class BattleSystem : MonoBehaviour
     }
     void HostAttack()
     {
-        //setup input
-        //for test, host just damage the boss
-        //change state based on what happened
         if (Input.GetKeyDown(KeyCode.Q))
         {
             bool physicalIsDead = bossUnit.TakePhysicalDamage(hostUnit.physicalDamage);
@@ -245,6 +245,10 @@ public class BattleSystem : MonoBehaviour
     void SoundTurn()
     {
         Debug.Log("It's Sound guy's turn, Press S to change music");
+        if (inspirationFull)
+        {
+            Debug.Log("Inspiration Full, press L to use unique skill");
+        }
     }
     void SoundAttack()
     {
@@ -252,7 +256,7 @@ public class BattleSystem : MonoBehaviour
         {
             bool physicalIsDead = bossUnit.TakePhysicalDamage(soundUnit.physicalDamage);
             bool magicalIsDead = bossUnit.TakeMagicalDamage(soundUnit.magicalDamage);
-
+            
             if (physicalIsDead && magicalIsDead)
             {
                 EndBattle(); // Game over
@@ -268,8 +272,42 @@ public class BattleSystem : MonoBehaviour
                 state = BattleState.CAMERATURN;
                 CameraTurn();
             }
+
             DamageMonitor();
         }
+        //I really should write this as a sepreate function
+        if (inspirationFull)
+        {
+            if (Input.GetKeyDown(KeyCode.L))
+            {
+                Debug.Log("Music Changed");
+                //reset the inspiration bar
+                soundUnit.inspirationBar = 0;
+                inspirationFull = false;
+
+                bool physicalIsDead = bossUnit.TakePhysicalDamage(soundUnit.physicalDamage);
+                bool magicalIsDead = bossUnit.TakeMagicalDamage(soundUnit.magicalDamage);
+
+                if (physicalIsDead && magicalIsDead)
+                {
+                    EndBattle(); // Game over
+                }
+                // Check if only one of them is dead
+                else if (physicalIsDead || magicalIsDead)
+                {
+                    state = BattleState.CAMERATURN;
+                    CameraTurn();
+                }
+                else
+                {
+                    state = BattleState.CAMERATURN;
+                    CameraTurn();
+                }
+
+                DamageMonitor();
+            }
+        }
+
     }
 
     void CameraTurn()
@@ -348,10 +386,12 @@ public class BattleSystem : MonoBehaviour
     void DamageMonitor()
     {
         //show all stats
-        Debug.Log("Host's physical HP: " + hostUnit.currentPhysicalHP);
-        Debug.Log("Summon's magical HP: " + summonUnit.currentMagicalHP);
-        Debug.Log("Director's physical HP: " + directorUnit.currentPhysicalHP);
+        Debug.Log("Host HP: " + hostUnit.currentPhysicalHP);
+        Debug.Log("Summon HP: " + summonUnit.currentMagicalHP);
+        Debug.Log("DirectorHP: " + directorUnit.currentPhysicalHP);
         Debug.Log("Boss's physical HP: " + bossUnit.currentPhysicalHP);
         Debug.Log("Boss's magical HP: " + bossUnit.currentMagicalHP);
+        Debug.Log("Inspiration:" + soundUnit.inspirationBar);
+        Debug.Log("InspirationFull" + inspirationFull);
     }
 }  
