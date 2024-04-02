@@ -13,6 +13,9 @@ public class Unit : MonoBehaviour
 
     public int currentPhysicalHP;
     public int currentMagicalHP;
+
+    public int inspirationBar;
+    public int maxInspirationBar;
     
     public bool TakePhysicalDamage (int physicalDmg)
     {
@@ -30,6 +33,19 @@ public class Unit : MonoBehaviour
         currentMagicalHP -= magicalDmg;
         if (currentMagicalHP <= 0)
         {
+            return true;
+        }
+        else
+            return false;
+    }
+
+    public bool UpdateInspirationBar(int physicalDmg)
+    {
+        inspirationBar += (physicalDmg);
+        if (inspirationBar >= maxInspirationBar)
+        {
+            //cap the bar so the value won't keep incrementing
+            inspirationBar = maxInspirationBar;
             return true;
         }
         else
