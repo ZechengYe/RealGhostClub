@@ -131,8 +131,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   unitName: Ghost
   physicalDamage: 10
-  magicalDamage: 0
+  magicalDamage: 50
   maxPhysicalHP: 100
   maxMagicalHP: 100
   currentPhysicalHP: 100
   currentMagicalHP: 100
+  inspirationBar: 0
+  maxInspirationBar: 0

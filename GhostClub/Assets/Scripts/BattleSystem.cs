@@ -9,6 +9,8 @@ public enum BattleState { START, BOSSTURN, HOSTTURN, SUMMONTURN, DIRECTORTURN, S
 
 public class BattleSystem : MonoBehaviour
 {
+    #region Declaration of variables
+    public bool DamageMonitorOn = false;
     public BattleState state;
 
     public GameObject hostPrefab;
@@ -38,13 +40,35 @@ public class BattleSystem : MonoBehaviour
     Unit internUnit;
     Unit bossUnit;
 
-    private int currentPlayerHP;
-    private int currentBossHP;
-
     bool inspirationFull = false;
-    
+    #endregion
 
-    // Update is called once per frame
+    //I put the shared health management system here instead of unit, so it's more manageable
+    public int teamphysicalHP = 1000;
+    public int teamMagicalHP = 500;
+    public bool TakeSharedPhysicalDamage(int physicalDmg)
+    {
+        teamphysicalHP -= physicalDmg;
+        if (teamphysicalHP <= 0)
+        {
+            teamphysicalHP = 0;
+            EndBattle();
+            return true; // Indicates death
+        }
+        return false;
+    }
+    public bool TakeSharedMagicalDamage(int magicalDmg)
+    {
+        teamMagicalHP -= magicalDmg;
+        if (teamMagicalHP <= 0)
+        {
+            teamMagicalHP = 0;
+            EndBattle();
+            return true; // Indicates death
+        }
+        return false;
+    }
+
     void Start()
     {
         state = BattleState.START;
@@ -98,7 +122,6 @@ public class BattleSystem : MonoBehaviour
     void Setup()
     {
         //this function spawns every unit at the beginning of the game
-        //this unit represents host
         GameObject playerHost = Instantiate(hostPrefab, hostBattleStation);
         hostUnit = playerHost.GetComponent<Unit>();
 
@@ -133,10 +156,12 @@ public class BattleSystem : MonoBehaviour
     void BossTurn()
     {
         Debug.Log("It's boss's turn");
-        bool isDead = soundUnit.TakePhysicalDamage(bossUnit.physicalDamage);
+        //deal both physical and magical damage for now
+        bool isDead = soundUnit.TakePhysicalDamage(bossUnit.physicalDamage, this);
+        bool summonisDead = summonUnit.TakeMagicalDamage(bossUnit.magicalDamage, this);
         inspirationFull = soundUnit.UpdateInspirationBar(bossUnit.physicalDamage);
         //check if the character is dead
-        if (isDead)
+        if (isDead || summonisDead)
         {
             //if anyone in the party died the game is over
             //at least for now
@@ -159,8 +184,8 @@ public class BattleSystem : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.Q))
         {
-            bool physicalIsDead = bossUnit.TakePhysicalDamage(hostUnit.physicalDamage);
-            bool magicalIsDead = bossUnit.TakeMagicalDamage(hostUnit.magicalDamage);
+            bool physicalIsDead = bossUnit.bossTakePhysicalDamage(hostUnit.physicalDamage);
+            bool magicalIsDead = bossUnit.bossTakeMagicalDamage(hostUnit.magicalDamage);
             //check if boss is dead or if the current bar reaches 0
 
             if (physicalIsDead && magicalIsDead)
@@ -193,8 +218,8 @@ public class BattleSystem : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.E))
         {
-            bool physicalIsDead = bossUnit.TakePhysicalDamage(summonUnit.physicalDamage);
-            bool magicalIsDead = bossUnit.TakeMagicalDamage(summonUnit.magicalDamage);
+            bool physicalIsDead = bossUnit.bossTakePhysicalDamage(summonUnit.physicalDamage);
+            bool magicalIsDead = bossUnit.bossTakeMagicalDamage(summonUnit.magicalDamage);
             //check if boss is dead or if the current bar reaches 0
 
             if (physicalIsDead && magicalIsDead)
@@ -233,8 +258,9 @@ public class BattleSystem : MonoBehaviour
             //if pause, boss spell chanting will be stopped
             //Time.timeScale = 0f;
             Debug.Log("Cut");
-            bool physicalIsDead = bossUnit.TakePhysicalDamage(directorUnit.physicalDamage);
-            bool magicalIsDead = bossUnit.TakeMagicalDamage(directorUnit.magicalDamage);
+
+            bool physicalIsDead = bossUnit.bossTakePhysicalDamage(directorUnit.physicalDamage);
+            bool magicalIsDead = bossUnit.bossTakeMagicalDamage(directorUnit.magicalDamage);
             //check if boss is dead or if the current bar reaches 0
 
             if (physicalIsDead && magicalIsDead)
@@ -272,8 +298,8 @@ public class BattleSystem : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.S))
         {
-            bool physicalIsDead = bossUnit.TakePhysicalDamage(soundUnit.physicalDamage);
-            bool magicalIsDead = bossUnit.TakeMagicalDamage(soundUnit.magicalDamage);
+            bool physicalIsDead = bossUnit.bossTakePhysicalDamage(soundUnit.physicalDamage);
+            bool magicalIsDead = bossUnit.bossTakeMagicalDamage(soundUnit.magicalDamage);
             
             if (physicalIsDead && magicalIsDead)
             {
@@ -302,10 +328,9 @@ public class BattleSystem : MonoBehaviour
                 //reset the inspiration bar
                 soundUnit.inspirationBar = 0;
                 inspirationFull = false;
-                
 
-                bool physicalIsDead = bossUnit.TakePhysicalDamage(soundUnit.physicalDamage);
-                bool magicalIsDead = bossUnit.TakeMagicalDamage(soundUnit.magicalDamage);
+                bool physicalIsDead = bossUnit.TakePhysicalDamage(soundUnit.physicalDamage, this);
+                bool magicalIsDead = bossUnit.TakeMagicalDamage(soundUnit.magicalDamage, this);
 
                 if (physicalIsDead && magicalIsDead)
                 {
@@ -337,8 +362,8 @@ public class BattleSystem : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.C))
         {
-            bool physicalIsDead = bossUnit.TakePhysicalDamage(cameraUnit.physicalDamage);
-            bool magicalIsDead = bossUnit.TakeMagicalDamage(cameraUnit.magicalDamage);
+            bool physicalIsDead = bossUnit.bossTakePhysicalDamage(cameraUnit.physicalDamage);
+            bool magicalIsDead = bossUnit.bossTakeMagicalDamage(cameraUnit.magicalDamage);
 
             if (physicalIsDead && magicalIsDead)
             {
@@ -367,8 +392,8 @@ public class BattleSystem : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.O))
         {
-            bool physicalIsDead = bossUnit.TakePhysicalDamage(internUnit.physicalDamage);
-            bool magicalIsDead = bossUnit.TakeMagicalDamage(internUnit.magicalDamage);
+            bool physicalIsDead = bossUnit.bossTakePhysicalDamage(internUnit.physicalDamage);
+            bool magicalIsDead = bossUnit.bossTakeMagicalDamage(internUnit.magicalDamage);
 
             if (physicalIsDead && magicalIsDead)
             {
@@ -399,18 +424,16 @@ public class BattleSystem : MonoBehaviour
         {
             Debug.Log("You Are So WEAK! You Lost!");
         }
-
     }
 
     void DamageMonitor()
     {
-        //show all stats
-        Debug.Log("Host HP: " + hostUnit.currentPhysicalHP);
-        Debug.Log("Summon HP: " + summonUnit.currentMagicalHP);
-        Debug.Log("DirectorHP: " + directorUnit.currentPhysicalHP);
-        Debug.Log("Boss's physical HP: " + bossUnit.currentPhysicalHP);
-        Debug.Log("Boss's magical HP: " + bossUnit.currentMagicalHP);
-        Debug.Log("Inspiration:" + soundUnit.inspirationBar);
-        Debug.Log("InspirationFull" + inspirationFull);
+        if (DamageMonitorOn == true)
+        {
+            //show all stats
+            Debug.Log("Team Physical HP: " + teamphysicalHP + " " + "Team Magical HP: " + teamMagicalHP);
+            Debug.Log("Boss physical HP: " + bossUnit.currentPhysicalHP + " " + "Boss magical HP: " + bossUnit.currentMagicalHP);
+            Debug.Log("Inspiration:" + soundUnit.inspirationBar + " " + "InspirationFull is" + inspirationFull);
+        }
     }
 }  

@@ -17,28 +17,40 @@ public class Unit : MonoBehaviour
 
     public int inspirationBar;
     public int maxInspirationBar;
-    public bool TakePhysicalDamage (int physicalDmg)
+
+    //these are for team
+    public bool TakePhysicalDamage(int physicalDmg, BattleSystem battleSystem)
+    {
+        return battleSystem.TakeSharedPhysicalDamage(physicalDmg);
+    }
+    public bool TakeMagicalDamage(int magicalDmg, BattleSystem battleSystem)
+    {
+        return battleSystem.TakeSharedMagicalDamage(magicalDmg);
+    }
+
+    //these are for boss
+    public bool bossTakePhysicalDamage(int physicalDmg)
     {
         currentPhysicalHP -= physicalDmg;
         if (currentPhysicalHP <= 0)
         {
-            return true;
+            return true; // Indicates death
+        }
+        else 
+            return false;
+    }
+    public bool bossTakeMagicalDamage(int magicalDmg)
+    {
+        currentMagicalHP -= magicalDmg;
+        if (currentMagicalHP <= 0)
+        {
+            return true; // Indicates death
         }
         else 
             return false;
     }
 
-    public bool TakeMagicalDamage(int magicalDmg)
-    {
-        currentMagicalHP -= magicalDmg;
-        if (currentMagicalHP <= 0)
-        {
-            return true;
-        }
-        else
-            return false;
-    }
-
+    //inspiration bar
     public bool UpdateInspirationBar(int physicalDmg)
     {
         inspirationBar += (physicalDmg);
