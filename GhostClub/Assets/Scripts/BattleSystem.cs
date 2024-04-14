@@ -80,7 +80,7 @@ public class BattleSystem : MonoBehaviour
         }
         return false;
     }
-
+    
     void Start()
     {
         state = BattleState.START;
@@ -89,48 +89,6 @@ public class BattleSystem : MonoBehaviour
 
     void Update()
     {
-        #region previous update before switch statement
-        /*if (state == BattleState.HOSTTURN)
-        {
-            HostAttack(); 
-        }
-
-        if (state == BattleState.SUMMONTURN)
-        {
-            SummonAttack();
-        }
-
-        if (state == BattleState.DIRECTORTURN)
-        {
-            DirectorAttack();
-        }
-
-        if (state == BattleState.SOUNDTURN)
-        {
-            SoundAttack();
-        }
-
-        if (state == BattleState.CAMERATURN)
-        {
-            CameraAttack();
-        }
-
-        if (state == BattleState.INTERNTURN)
-        {
-            InternAttack();
-        }
-
-        if (inspirationFull == true)
-        {
-            Unit soundUnit = GameManager.instance.sound.GetComponent<Unit>();
-            int inspiration = soundUnit.inspirationBar;
-            SoundInspiration.value = inspiration;
-        }
-        else
-        {
-            SoundInspiration.value = 0;
-        }*/
-        #endregion
         switch (state)
         {
             //connect everyone's turn and branch
@@ -147,15 +105,13 @@ public class BattleSystem : MonoBehaviour
                     TransitionToNextTurn();
                 }    
                 break;
-                //more debug message
+                
             case BattleState.HOSTMENU:
-                //has to debug something only once, asking player to input 1 or 2 
-
-
-
-
-
-
+                if (isTurnStart)
+                {
+                    Debug.Log("Host Press 1 to use skill 1, Press 2 to use skill2");
+                    isTurnStart = false;
+                }
 
                 if (Input.GetKeyDown(KeyCode.Alpha1))
                 {
@@ -168,11 +124,169 @@ public class BattleSystem : MonoBehaviour
                     TransitionToNextTurn();  // Moves to SUMMONTURN after action
                 }
                 break;
+
             case BattleState.SUMMONTURN:
+                if (isTurnStart)
+                {
+                    Debug.Log("It's Summon's turn, Press E to open skill tree");
+                    isTurnStart = false;
+                }
+                //just for now...to check if things work
+                if(Input.GetKeyDown(KeyCode.E))
+                {
+                    TransitionToNextTurn();
+                }    
                 break;
             case BattleState.SUMMONMENU:
+                if (isTurnStart)
+                {
+                    Debug.Log("Summon Press 1 to use skill 1, Press 2 to use skill2");
+                    isTurnStart = false;
+                }
+
+                if (Input.GetKeyDown(KeyCode.Alpha1))
+                {
+                    FirstSkill();
+                    TransitionToNextTurn();  
+                }
+                if (Input.GetKeyDown(KeyCode.Alpha2))
+                {
+                    SecondSkill();
+                    TransitionToNextTurn();  
+                }
                 break;
 
+            case BattleState.DIRECTORTURN:
+                if (isTurnStart)
+                {
+                    Debug.Log("It's Director's turn, Press W to open skill tree");
+                    isTurnStart = false;
+                }
+                //just for now...to check if things work
+                if(Input.GetKeyDown(KeyCode.W))
+                {
+                    TransitionToNextTurn();
+                }    
+                break;
+
+            case BattleState.DIRECTORMENU:
+                if (isTurnStart)
+                {
+                    Debug.Log("Director Press 1 & 2 to attack");
+                    isTurnStart = false;
+                }
+                if (Input.GetKeyDown(KeyCode.Alpha1))
+                {
+                    FirstSkill();
+                    TransitionToNextTurn();  
+                }
+                if (Input.GetKeyDown(KeyCode.Alpha2))
+                {
+                    SecondSkill();
+                    TransitionToNextTurn();  
+                }
+                break;
+            
+            case BattleState.SOUNDTURN:
+                if (isTurnStart)
+                {
+                    Debug.Log("It's Sound's turn, Press S to open skill tree");
+                    isTurnStart = false;
+                }
+                if(Input.GetKeyDown(KeyCode.S))
+                {
+                    TransitionToNextTurn();
+                }    
+                break;
+
+            case BattleState.SOUNDMENU:
+                if (isTurnStart)
+                {
+                    Debug.Log("Sound, Press 1 & 2 to attack");
+                    isTurnStart = false;
+                }
+                if (Input.GetKeyDown(KeyCode.Alpha1))
+                {
+                    FirstSkill();
+                    TransitionToNextTurn();  
+                }
+                if (Input.GetKeyDown(KeyCode.Alpha2))
+                {
+                    SecondSkill();
+                    TransitionToNextTurn();  
+                }
+                break;
+
+            case BattleState.CAMERATURN:
+                if (isTurnStart)
+                {
+                    Debug.Log("It's Camera's turn, Press C to open skill tree");
+                    isTurnStart = false;
+                }
+                if(Input.GetKeyDown(KeyCode.C))
+                {
+                    TransitionToNextTurn();
+                }    
+                break;
+
+            case BattleState.CAMERAMENU:
+                if (isTurnStart)
+                {
+                    Debug.Log("It's Camera's turn, Press 1 & 2 to use skills");
+                    isTurnStart = false;
+                }
+
+                if (Input.GetKeyDown(KeyCode.Alpha1))
+                {
+                    FirstSkill();
+                    TransitionToNextTurn();  
+                }
+                if (Input.GetKeyDown(KeyCode.Alpha2))
+                {
+                    SecondSkill();
+                    TransitionToNextTurn();  
+                }
+                break;
+            case BattleState.INTERNTURN:
+                if (isTurnStart)
+                {
+                    Debug.Log("It's Intern's turn, Press I to open skill tree");
+                    isTurnStart = false;
+                }
+                if(Input.GetKeyDown(KeyCode.I))
+                {
+                    TransitionToNextTurn();
+                }    
+                break;
+
+            case BattleState.INTERNMENU:
+                if (isTurnStart)
+                {
+                    Debug.Log("It's Intern's turn, Press 1 & 2 to use skills");
+                    isTurnStart = false;
+                }
+
+                if (Input.GetKeyDown(KeyCode.Alpha1))
+                {
+                    FirstSkill();
+                    TransitionToNextTurn();  
+                }
+                if (Input.GetKeyDown(KeyCode.Alpha2))
+                {
+                    SecondSkill();
+                    TransitionToNextTurn();  
+                }
+                break;
+
+            case BattleState.BOSSTURN:
+                if (isTurnStart)
+                {
+                    Debug.Log("It's Boss's turn, Press C");
+                    isTurnStart = false;
+                    TransitionToNextTurn();
+                }
+
+                break;
 
             case BattleState.WON:
                 Debug.Log("You Win The JRPG Battle!");
@@ -206,7 +320,7 @@ public class BattleSystem : MonoBehaviour
         Debug.Log("Damaged Boss by Skill 2");
         DamageMonitor();
     }
-    void TransitionToNextTurn() //this function now is a state machine sitwhc
+    void TransitionToNextTurn() //this function now is a state machine switch
     {
         Debug.Log($"Current state before transition: {state}");
         switch (state)
@@ -229,6 +343,18 @@ public class BattleSystem : MonoBehaviour
             case BattleState.DIRECTORMENU:
                 state = BattleState.SOUNDTURN;
                 break;
+            case BattleState.SOUNDTURN:
+                state = BattleState.SOUNDMENU;
+                break;
+            case BattleState.SOUNDMENU:
+                state = BattleState.CAMERATURN;
+                break;
+            case BattleState.CAMERATURN:
+                state = BattleState.CAMERAMENU;
+                break;
+            case BattleState.CAMERAMENU:
+                state = BattleState.INTERNTURN;
+                break;
             case BattleState.INTERNTURN:
                 state = BattleState.INTERNMENU;
                 break;
@@ -239,10 +365,11 @@ public class BattleSystem : MonoBehaviour
                 state = BattleState.HOSTTURN;
                 break;
         }
-        isTurnStart = true;
 
+        isTurnStart = true;
         Debug.Log($"Transitioning to: {state}");
     }
+
     void Setup()
     {
         //this function spawns every unit at the beginning of the game
