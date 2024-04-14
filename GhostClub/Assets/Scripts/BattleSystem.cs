@@ -5,7 +5,18 @@ using UnityEngine.UIElements;
 using UnityEngine.UI;
 using Slider = UnityEngine.UI.Slider;
 
-public enum BattleState { START, BOSSTURN, HOSTTURN, SUMMONTURN, DIRECTORTURN, SOUNDTURN, CAMERATURN, INTERNTURN, WON, LOST }
+public enum BattleState 
+{
+    START,
+    HOSTTURN, HOSTMENU,
+    SUMMONTURN, SUMMONMENU,
+    DIRECTORTURN, DIRECTORMENU,
+    SOUNDTURN, SOUNDMENU,
+    CAMERATURN, CAMERAMENU,
+    INTERNTURN, INTERNMENU,
+    BOSSTURN,
+    WON, LOST
+}
 
 public class BattleSystem : MonoBehaviour
 {
@@ -42,6 +53,7 @@ public class BattleSystem : MonoBehaviour
 
     bool inspirationFull = false;
     #endregion
+    private bool isTurnStart = true;
 
     //I put the shared health management system here instead of unit, so it's more manageable
     public int teamphysicalHP = 1000;
@@ -77,7 +89,8 @@ public class BattleSystem : MonoBehaviour
 
     void Update()
     {
-        if (state == BattleState.HOSTTURN)
+        #region previous update before switch statement
+        /*if (state == BattleState.HOSTTURN)
         {
             HostAttack(); 
         }
@@ -116,9 +129,120 @@ public class BattleSystem : MonoBehaviour
         else
         {
             SoundInspiration.value = 0;
+        }*/
+        #endregion
+        switch (state)
+        {
+            //connect everyone's turn and branch
+            //add actual damage monitor and function into new state machine
+            case BattleState.HOSTTURN:
+                if (isTurnStart)
+                {
+                    Debug.Log("It's Host's turn, Press Q to open skill tree");
+                    isTurnStart = false;
+                }
+                //just for now...to check if things work
+                if(Input.GetKeyDown(KeyCode.Q))
+                {
+                    TransitionToNextTurn();
+                }    
+                break;
+                //more debug message
+            case BattleState.HOSTMENU:
+                //has to debug something only once, asking player to input 1 or 2 
+
+
+
+
+
+
+
+                if (Input.GetKeyDown(KeyCode.Alpha1))
+                {
+                    FirstSkill();
+                    TransitionToNextTurn();  // Moves to SUMMONTURN after action
+                }
+                if (Input.GetKeyDown(KeyCode.Alpha2))
+                {
+                    SecondSkill();
+                    TransitionToNextTurn();  // Moves to SUMMONTURN after action
+                }
+                break;
+            case BattleState.SUMMONTURN:
+                break;
+            case BattleState.SUMMONMENU:
+                break;
+
+
+            case BattleState.WON:
+                Debug.Log("You Win The JRPG Battle!");
+                break;
+
+            case BattleState.LOST:
+                Debug.Log("You LOST!");
+                break;
         }
+
+        if (inspirationFull == true)
+        {
+            Unit soundUnit = GameManager.instance.sound.GetComponent<Unit>();
+            int inspiration = soundUnit.inspirationBar;
+            SoundInspiration.value = inspiration;
+        }
+        else
+        {
+            SoundInspiration.value = 0;
+        }
+        
     }
 
+    void FirstSkill()
+    {
+         Debug.Log("Damaged Boss by Skill 1");
+         DamageMonitor();
+    }
+    void SecondSkill()
+    {
+        Debug.Log("Damaged Boss by Skill 2");
+        DamageMonitor();
+    }
+    void TransitionToNextTurn() //this function now is a state machine sitwhc
+    {
+        Debug.Log($"Current state before transition: {state}");
+        switch (state)
+        {
+            case BattleState.HOSTTURN:
+                state = BattleState.HOSTMENU;
+                break;
+            case BattleState.HOSTMENU:
+                state = BattleState.SUMMONTURN;
+                break;
+            case BattleState.SUMMONTURN:
+                state = BattleState.SUMMONMENU;
+                break;
+            case BattleState.SUMMONMENU:
+                state = BattleState.DIRECTORTURN;
+                break;
+            case BattleState.DIRECTORTURN:
+                state = BattleState.DIRECTORMENU;
+                break;
+            case BattleState.DIRECTORMENU:
+                state = BattleState.SOUNDTURN;
+                break;
+            case BattleState.INTERNTURN:
+                state = BattleState.INTERNMENU;
+                break;
+            case BattleState.INTERNMENU:
+                state = BattleState.BOSSTURN;
+                break;
+            case BattleState.BOSSTURN:
+                state = BattleState.HOSTTURN;
+                break;
+        }
+        isTurnStart = true;
+
+        Debug.Log($"Transitioning to: {state}");
+    }
     void Setup()
     {
         //this function spawns every unit at the beginning of the game
@@ -144,15 +268,8 @@ public class BattleSystem : MonoBehaviour
         GameObject bossGO = Instantiate(bossPrefab, bossBattleStation);
         bossUnit = bossGO.GetComponent<Unit>();
 
-        //for test purpose I will let the host move first
-        //the boss should move first based on our design
-        //state = BattleState.BOSSTURN;
-        //BossTurn();
-
         state = BattleState.HOSTTURN;
-        HostTurn();
     }
-
     void BossTurn()
     {
         Debug.Log("It's boss's turn");
