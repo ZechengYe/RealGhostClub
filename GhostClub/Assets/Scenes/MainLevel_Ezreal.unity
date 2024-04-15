@@ -1850,6 +1850,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fee482cb85e39d942a306dac874aa9ac, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  DamageMonitorOn: 1
   state: 0
   hostPrefab: {fileID: 2129651471537834010, guid: 83548f0b10855cf4c83cec8d3e09ca61,
     type: 3}
@@ -1873,6 +1874,8 @@ MonoBehaviour:
   cameraBattleStation: {fileID: 139374674}
   internBattleStation: {fileID: 737086627}
   bossBattleStation: {fileID: 150661757}
+  teamphysicalHP: 1000
+  teamMagicalHP: 500
 --- !u!1001 &1025167586
 PrefabInstance:
   m_ObjectHideFlags: 0

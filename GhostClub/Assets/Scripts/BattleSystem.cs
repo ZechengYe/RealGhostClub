@@ -115,13 +115,11 @@ public class BattleSystem : MonoBehaviour
 
                 if (Input.GetKeyDown(KeyCode.Alpha1))
                 {
-                    FirstSkill();
-                    TransitionToNextTurn();  // Moves to SUMMONTURN after action
+                    HostSkill_A();// Moves to SUMMONTURN after action
                 }
                 if (Input.GetKeyDown(KeyCode.Alpha2))
                 {
-                    SecondSkill();
-                    TransitionToNextTurn();  // Moves to SUMMONTURN after action
+                    HostSkill_B();// Moves to SUMMONTURN after action
                 }
                 break;
 
@@ -137,6 +135,7 @@ public class BattleSystem : MonoBehaviour
                     TransitionToNextTurn();
                 }    
                 break;
+
             case BattleState.SUMMONMENU:
                 if (isTurnStart)
                 {
@@ -146,13 +145,11 @@ public class BattleSystem : MonoBehaviour
 
                 if (Input.GetKeyDown(KeyCode.Alpha1))
                 {
-                    FirstSkill();
-                    TransitionToNextTurn();  
+                    SummonSkill_A();
                 }
                 if (Input.GetKeyDown(KeyCode.Alpha2))
                 {
-                    SecondSkill();
-                    TransitionToNextTurn();  
+                    SummonSkill_B();
                 }
                 break;
 
@@ -177,13 +174,11 @@ public class BattleSystem : MonoBehaviour
                 }
                 if (Input.GetKeyDown(KeyCode.Alpha1))
                 {
-                    FirstSkill();
-                    TransitionToNextTurn();  
+                    DirectorSkill_A();  
                 }
                 if (Input.GetKeyDown(KeyCode.Alpha2))
                 {
-                    SecondSkill();
-                    TransitionToNextTurn();  
+                    DirectorSkill_B();  
                 }
                 break;
             
@@ -203,17 +198,19 @@ public class BattleSystem : MonoBehaviour
                 if (isTurnStart)
                 {
                     Debug.Log("Sound, Press 1 & 2 to attack");
+                    if (inspirationFull)
+                    {
+                     Debug.Log("Inspiration Full, press 2 to use unique skill");
+                    }
                     isTurnStart = false;
                 }
                 if (Input.GetKeyDown(KeyCode.Alpha1))
                 {
-                    FirstSkill();
-                    TransitionToNextTurn();  
+                    SoundSkill_A();
                 }
                 if (Input.GetKeyDown(KeyCode.Alpha2))
                 {
-                    SecondSkill();
-                    TransitionToNextTurn();  
+                    SoundSkill_B();
                 }
                 break;
 
@@ -235,18 +232,16 @@ public class BattleSystem : MonoBehaviour
                     Debug.Log("It's Camera's turn, Press 1 & 2 to use skills");
                     isTurnStart = false;
                 }
-
                 if (Input.GetKeyDown(KeyCode.Alpha1))
                 {
-                    FirstSkill();
-                    TransitionToNextTurn();  
+                    CameraSkill_A();
                 }
                 if (Input.GetKeyDown(KeyCode.Alpha2))
                 {
-                    SecondSkill();
-                    TransitionToNextTurn();  
+                    CameraSkill_B();
                 }
                 break;
+                
             case BattleState.INTERNTURN:
                 if (isTurnStart)
                 {
@@ -268,24 +263,21 @@ public class BattleSystem : MonoBehaviour
 
                 if (Input.GetKeyDown(KeyCode.Alpha1))
                 {
-                    FirstSkill();
-                    TransitionToNextTurn();  
+                    InternSkill_A();
                 }
                 if (Input.GetKeyDown(KeyCode.Alpha2))
                 {
-                    SecondSkill();
-                    TransitionToNextTurn();  
+                    InternSkill_B();
                 }
                 break;
 
             case BattleState.BOSSTURN:
                 if (isTurnStart)
                 {
-                    Debug.Log("It's Boss's turn, Press C");
+                    Debug.Log("It's Boss's turn");
                     isTurnStart = false;
-                    TransitionToNextTurn();
+                    BossSkill_A();
                 }
-
                 break;
 
             case BattleState.WON:
@@ -310,19 +302,340 @@ public class BattleSystem : MonoBehaviour
         
     }
 
-    void FirstSkill()
+#region Character Skills
+    void HostSkill_A()
     {
-         Debug.Log("Damaged Boss by Skill 1");
-         DamageMonitor();
+        Debug.Log("Host Damaged Boss by Skill 1");
+        bool physicalIsDead = bossUnit.bossTakePhysicalDamage(hostUnit.physicalDamage);
+        bool magicalIsDead = bossUnit.bossTakeMagicalDamage(hostUnit.magicalDamage);
+
+        if (physicalIsDead && magicalIsDead)
+        {
+            EndBattle(); // Game over
+        }
+            // Check if only one of them is dead
+        else if (physicalIsDead || magicalIsDead)
+        {
+            TransitionToNextTurn();
+        }
+        else
+        {
+            TransitionToNextTurn();
+        }
+            DamageMonitor();
     }
-    void SecondSkill()
+    void HostSkill_B()
     {
-        Debug.Log("Damaged Boss by Skill 2");
+        Debug.Log("Host Damaged Boss by Skill 2");
+        bool physicalIsDead = bossUnit.bossTakePhysicalDamage(hostUnit.physicalDamage);
+        bool magicalIsDead = bossUnit.bossTakeMagicalDamage(hostUnit.magicalDamage);
+
+        if (physicalIsDead && magicalIsDead)
+        {
+            EndBattle(); // Game over
+        }
+            // Check if only one of them is dead
+        else if (physicalIsDead || magicalIsDead)
+        {
+            TransitionToNextTurn();
+        }
+        else
+        {
+            TransitionToNextTurn();
+        }
+            DamageMonitor();
+    }
+    
+    void SummonSkill_A()
+    {   
+        Debug.Log("Summon Damaged Boss by Skill 1");
+
+        bool physicalIsDead = bossUnit.bossTakePhysicalDamage(summonUnit.physicalDamage);
+        bool magicalIsDead = bossUnit.bossTakeMagicalDamage(summonUnit.magicalDamage);
+        if (physicalIsDead && magicalIsDead)
+        {
+            EndBattle(); // Game over
+        }
+            // Check if only one of them is dead
+        else if (physicalIsDead || magicalIsDead)
+        {
+            TransitionToNextTurn();
+        }
+        else
+        {
+            TransitionToNextTurn();
+        }
         DamageMonitor();
     }
+    void SummonSkill_B()
+    {
+        Debug.Log("Summon Damaged Boss by Skill 2");
+
+        bool physicalIsDead = bossUnit.bossTakePhysicalDamage(summonUnit.physicalDamage);
+        bool magicalIsDead = bossUnit.bossTakeMagicalDamage(summonUnit.magicalDamage);
+        if (physicalIsDead && magicalIsDead)
+        {
+            EndBattle(); // Game over
+        }
+            // Check if only one of them is dead
+        else if (physicalIsDead || magicalIsDead)
+        {
+            TransitionToNextTurn();
+        }
+        else
+        {
+            TransitionToNextTurn();
+        }
+        DamageMonitor();
+    }
+    
+    void DirectorSkill_A()
+    {
+        Debug.Log("Director Damaged Boss Skill 1");
+        bool physicalIsDead = bossUnit.bossTakePhysicalDamage(directorUnit.physicalDamage);
+        bool magicalIsDead = bossUnit.bossTakeMagicalDamage(directorUnit.magicalDamage);
+            //check if boss is dead or if the current bar reaches 0
+
+        if (physicalIsDead && magicalIsDead)
+        {
+            EndBattle(); // Game over
+        }
+            // Check if only one of them is dead
+        else if (physicalIsDead || magicalIsDead)
+        {
+            TransitionToNextTurn();
+        }
+        else
+        {
+            TransitionToNextTurn();
+        }
+        DamageMonitor();    
+    }
+    void DirectorSkill_B()
+    {
+        Debug.Log("Director Damaged Boss Skill 2");
+        bool physicalIsDead = bossUnit.bossTakePhysicalDamage(directorUnit.physicalDamage);
+        bool magicalIsDead = bossUnit.bossTakeMagicalDamage(directorUnit.magicalDamage);
+            //check if boss is dead or if the current bar reaches 0
+
+        if (physicalIsDead && magicalIsDead)
+        {
+            EndBattle(); // Game over
+        }
+            // Check if only one of them is dead
+        else if (physicalIsDead || magicalIsDead)
+        {
+            TransitionToNextTurn();
+        }
+        else
+        {
+            TransitionToNextTurn();
+        }
+        DamageMonitor();    
+    }
+    
+    void SoundSkill_A()
+    {
+        Debug.Log("Sound Damaged Boss Skill 1");
+
+        bool physicalIsDead = bossUnit.bossTakePhysicalDamage(soundUnit.physicalDamage);
+        bool magicalIsDead = bossUnit.bossTakeMagicalDamage(soundUnit.magicalDamage);
+            
+        if (physicalIsDead && magicalIsDead)
+        {
+            EndBattle(); // Game over
+        }
+        
+        else if (physicalIsDead || magicalIsDead)
+        {
+            TransitionToNextTurn();
+        }
+        else
+        {
+            TransitionToNextTurn();
+        }
+
+        DamageMonitor();
+    }
+    void SoundSkill_B()
+    {
+        if (inspirationFull)
+        {   
+            Debug.Log("Sound Damaged Boss Skill 2");
+            Debug.Log("Music Changed");
+                //reset the inspiration bar
+            soundUnit.inspirationBar = 0;
+            inspirationFull = false;
+
+            bool physicalIsDead = bossUnit.TakePhysicalDamage(soundUnit.physicalDamage, this);
+            bool magicalIsDead = bossUnit.TakeMagicalDamage(soundUnit.magicalDamage, this);
+
+            if (physicalIsDead && magicalIsDead)
+            {
+                EndBattle(); // Game over
+            }
+                // Check if only one of them is dead
+            else if (physicalIsDead || magicalIsDead)
+            {
+                TransitionToNextTurn();
+            }
+            else
+            {
+                TransitionToNextTurn();
+            }
+
+            DamageMonitor();
+        }
+    }
+    
+    void CameraSkill_A()
+    {
+        Debug.Log("Camera Uses Skill 1");
+        bool physicalIsDead = bossUnit.bossTakePhysicalDamage(cameraUnit.physicalDamage);
+        bool magicalIsDead = bossUnit.bossTakeMagicalDamage(cameraUnit.magicalDamage);
+
+        if (physicalIsDead && magicalIsDead)
+        {
+            EndBattle(); // Game over
+        }
+        else if (physicalIsDead || magicalIsDead)
+        {
+            TransitionToNextTurn();
+        }
+        else
+        {
+            TransitionToNextTurn();
+        }
+        DamageMonitor();
+    }
+    void CameraSkill_B()
+    {
+        Debug.Log("Camera Uses Skill 2");
+        bool physicalIsDead = bossUnit.bossTakePhysicalDamage(cameraUnit.physicalDamage);
+        bool magicalIsDead = bossUnit.bossTakeMagicalDamage(cameraUnit.magicalDamage);
+
+        if (physicalIsDead && magicalIsDead)
+        {
+            EndBattle(); // Game over
+        }
+        else if (physicalIsDead || magicalIsDead)
+        {
+            TransitionToNextTurn();
+        }
+        else
+        {
+            TransitionToNextTurn();
+        }
+        DamageMonitor();
+    }
+    
+    void InternSkill_A()
+    {
+        Debug.Log("Intern Uses Skill 1");
+        bool physicalIsDead = bossUnit.bossTakePhysicalDamage(internUnit.physicalDamage);
+        bool magicalIsDead = bossUnit.bossTakeMagicalDamage(internUnit.magicalDamage);
+
+        if (physicalIsDead && magicalIsDead)
+        {
+            EndBattle(); // Game over
+        }
+        else if (physicalIsDead || magicalIsDead)
+        {
+            TransitionToNextTurn();
+        }
+        else
+        {
+            TransitionToNextTurn();
+        }
+        DamageMonitor();
+    }
+    void InternSkill_B()
+    {
+        Debug.Log("Intern Uses Skill 2");
+        bool physicalIsDead = bossUnit.bossTakePhysicalDamage(internUnit.physicalDamage);
+        bool magicalIsDead = bossUnit.bossTakeMagicalDamage(internUnit.magicalDamage);
+
+        if (physicalIsDead && magicalIsDead)
+        {
+            EndBattle(); // Game over
+        }
+        else if (physicalIsDead || magicalIsDead)
+        {
+            TransitionToNextTurn();
+        }
+        else
+        {
+            TransitionToNextTurn();
+        }
+        DamageMonitor();
+    }
+#endregion
+ 
+#region Boss Behavior & Skills
+    void BossSkill_A()
+    {
+        Debug.Log("Boss uses Skill 1");
+        //deal both physical and magical damage for now
+        bool isDead = soundUnit.TakePhysicalDamage(bossUnit.physicalDamage, this);
+        bool summonisDead = summonUnit.TakeMagicalDamage(bossUnit.magicalDamage, this);
+        inspirationFull = soundUnit.UpdateInspirationBar(bossUnit.physicalDamage);
+        //check if the character is dead
+        if (isDead || summonisDead)
+        {
+            state = BattleState.LOST;
+            EndBattle();
+        }
+        else
+        {
+            TransitionToNextTurn();
+        }
+        DamageMonitor();
+    }
+#endregion
+    
+    void Setup()
+    {
+        //this function spawns every unit at the beginning of the game
+        GameObject playerHost = Instantiate(hostPrefab, hostBattleStation);
+        hostUnit = playerHost.GetComponent<Unit>();
+
+        GameObject playerSummon = Instantiate(summonPrefab, summonBattleStation);
+        summonUnit = playerSummon.GetComponent<Unit>();
+
+        GameObject playerDirector = Instantiate(directorPrefab, directorBattleStation);
+        directorUnit = playerDirector.GetComponent<Unit>();
+
+        GameObject playerSound = Instantiate(soundPrefab, soundBattleStation);
+        soundUnit = playerSound.GetComponent<Unit>();
+
+        GameObject playerCamera = Instantiate(cameraPrefab, cameraBattleStation);
+        cameraUnit = playerCamera.GetComponent<Unit>();
+
+        GameObject playerIntern = Instantiate(internPrefab, internBattleStation);
+        internUnit = playerIntern.GetComponent<Unit>();
+
+        //GO stands for gameobject
+        GameObject bossGO = Instantiate(bossPrefab, bossBattleStation);
+        bossUnit = bossGO.GetComponent<Unit>();
+
+        state = BattleState.HOSTTURN;
+    }
+
+    void EndBattle()
+    {
+        if (state == BattleState.WON)
+        {
+            Debug.Log("You Win The JRPG Battle!");
+        }
+        else if (state == BattleState.LOST)
+        {
+            Debug.Log("You Are So WEAK! You Lost!");
+        }
+    }
+
     void TransitionToNextTurn() //this function now is a state machine switch
     {
-        Debug.Log($"Current state before transition: {state}");
+        //Debug.Log($"Current state before transition: {state}");
         switch (state)
         {
             case BattleState.HOSTTURN:
@@ -367,309 +680,9 @@ public class BattleSystem : MonoBehaviour
         }
 
         isTurnStart = true;
-        Debug.Log($"Transitioning to: {state}");
+        //Debug.Log($"Transitioning to: {state}");
     }
-
-    void Setup()
-    {
-        //this function spawns every unit at the beginning of the game
-        GameObject playerHost = Instantiate(hostPrefab, hostBattleStation);
-        hostUnit = playerHost.GetComponent<Unit>();
-
-        GameObject playerSummon = Instantiate(summonPrefab, summonBattleStation);
-        summonUnit = playerSummon.GetComponent<Unit>();
-
-        GameObject playerDirector = Instantiate(directorPrefab, directorBattleStation);
-        directorUnit = playerDirector.GetComponent<Unit>();
-
-        GameObject playerSound = Instantiate(soundPrefab, soundBattleStation);
-        soundUnit = playerSound.GetComponent<Unit>();
-
-        GameObject playerCamera = Instantiate(cameraPrefab, cameraBattleStation);
-        cameraUnit = playerCamera.GetComponent<Unit>();
-
-        GameObject playerIntern = Instantiate(internPrefab, internBattleStation);
-        internUnit = playerIntern.GetComponent<Unit>();
-
-        //GO stands for gameobject
-        GameObject bossGO = Instantiate(bossPrefab, bossBattleStation);
-        bossUnit = bossGO.GetComponent<Unit>();
-
-        state = BattleState.HOSTTURN;
-    }
-    void BossTurn()
-    {
-        Debug.Log("It's boss's turn");
-        //deal both physical and magical damage for now
-        bool isDead = soundUnit.TakePhysicalDamage(bossUnit.physicalDamage, this);
-        bool summonisDead = summonUnit.TakeMagicalDamage(bossUnit.magicalDamage, this);
-        inspirationFull = soundUnit.UpdateInspirationBar(bossUnit.physicalDamage);
-        //check if the character is dead
-        if (isDead || summonisDead)
-        {
-            //if anyone in the party died the game is over
-            //at least for now
-            state = BattleState.LOST;
-            EndBattle();
-        }
-        else
-        {
-            state = BattleState.HOSTTURN;
-            HostTurn();
-        }
-        DamageMonitor();
-    }
-
-    void HostTurn()
-    {
-        Debug.Log("It's Host's turn, Press Q to deal physical damage");
-    }
-    void HostAttack()
-    {
-        if (Input.GetKeyDown(KeyCode.Q))
-        {
-            bool physicalIsDead = bossUnit.bossTakePhysicalDamage(hostUnit.physicalDamage);
-            bool magicalIsDead = bossUnit.bossTakeMagicalDamage(hostUnit.magicalDamage);
-            //check if boss is dead or if the current bar reaches 0
-
-            if (physicalIsDead && magicalIsDead)
-            {
-                EndBattle(); // Game over
-            }
-            // Check if only one of them is dead
-            else if (physicalIsDead || magicalIsDead)
-            {
-                // go to summon's turn
-                state = BattleState.SUMMONTURN;
-                SummonTurn();
-            }
-            else
-            {
-                // Both physical and magical damage are alive, proceed to summon's turn
-                //state = BattleState.SUMMONTURN;
-                state = BattleState.SUMMONTURN;
-                SummonTurn();
-            }
-            DamageMonitor();
-        }
-    }
-
-    void SummonTurn()
-    {
-        Debug.Log("It's Summon's turn, Press E to deal magical damage");
-    }
-    void SummonAttack()
-    {
-        if (Input.GetKeyDown(KeyCode.E))
-        {
-            bool physicalIsDead = bossUnit.bossTakePhysicalDamage(summonUnit.physicalDamage);
-            bool magicalIsDead = bossUnit.bossTakeMagicalDamage(summonUnit.magicalDamage);
-            //check if boss is dead or if the current bar reaches 0
-
-            if (physicalIsDead && magicalIsDead)
-            {
-                EndBattle(); // Game over
-            }
-            // Check if only one of them is dead
-            else if (physicalIsDead || magicalIsDead)
-            {
-                // Return to boss's turn
-                state = BattleState.DIRECTORTURN;
-                DirectorTurn();
-            }
-            else
-            {
-                // Both physical and magical damage are alive, proceed to summon's turn
-                // for now it's boss turn
-                //state = BattleState.SUMMONTURN;
-                state = BattleState.DIRECTORTURN;
-                DirectorTurn();
-            }
-            DamageMonitor();
-        }
-    }
-
-    void DirectorTurn()
-    {
-        Debug.Log("It's Director's turn, Press W to cut and pause the game");
-    }
-    void DirectorAttack()
-    {
-        if (Input.GetKeyDown(KeyCode.W))
-        {
-            //future function
-            //director pauses the game or serving as pause function
-            //if pause, boss spell chanting will be stopped
-            //Time.timeScale = 0f;
-            Debug.Log("Cut");
-
-            bool physicalIsDead = bossUnit.bossTakePhysicalDamage(directorUnit.physicalDamage);
-            bool magicalIsDead = bossUnit.bossTakeMagicalDamage(directorUnit.magicalDamage);
-            //check if boss is dead or if the current bar reaches 0
-
-            if (physicalIsDead && magicalIsDead)
-            {
-                EndBattle(); // Game over
-            }
-            // Check if only one of them is dead
-            else if (physicalIsDead || magicalIsDead)
-            {
-                // Return to boss's turn
-                state = BattleState.SOUNDTURN;
-                SoundTurn();
-            }
-            else
-            {
-                // Both physical and magical damage are alive, proceed to summon's turn
-                // for now it's boss turn
-                //state = BattleState.SUMMONTURN;
-                state = BattleState.SOUNDTURN;
-                SoundTurn();
-            }
-            DamageMonitor();
-        }
-    }
-
-    void SoundTurn()
-    {
-        Debug.Log("It's Sound guy's turn, Press S to change music");
-        if (inspirationFull)
-        {
-            Debug.Log("Inspiration Full, press L to use unique skill");
-        }
-    }
-    void SoundAttack()
-    {
-        if (Input.GetKeyDown(KeyCode.S))
-        {
-            bool physicalIsDead = bossUnit.bossTakePhysicalDamage(soundUnit.physicalDamage);
-            bool magicalIsDead = bossUnit.bossTakeMagicalDamage(soundUnit.magicalDamage);
-            
-            if (physicalIsDead && magicalIsDead)
-            {
-                EndBattle(); // Game over
-            }
-            // Check if only one of them is dead
-            else if (physicalIsDead || magicalIsDead)
-            {
-                state = BattleState.CAMERATURN;
-                CameraTurn();
-            }
-            else
-            {
-                state = BattleState.CAMERATURN;
-                CameraTurn();
-            }
-
-            DamageMonitor();
-        }
-        //I really should write this as a sepreate function
-        if (inspirationFull)
-        {
-            if (Input.GetKeyDown(KeyCode.L))
-            {
-                Debug.Log("Music Changed");
-                //reset the inspiration bar
-                soundUnit.inspirationBar = 0;
-                inspirationFull = false;
-
-                bool physicalIsDead = bossUnit.TakePhysicalDamage(soundUnit.physicalDamage, this);
-                bool magicalIsDead = bossUnit.TakeMagicalDamage(soundUnit.magicalDamage, this);
-
-                if (physicalIsDead && magicalIsDead)
-                {
-                    EndBattle(); // Game over
-                }
-                // Check if only one of them is dead
-                else if (physicalIsDead || magicalIsDead)
-                {
-                    state = BattleState.CAMERATURN;
-                    CameraTurn();
-                }
-                else
-                {
-                    state = BattleState.CAMERATURN;
-                    CameraTurn();
-                }
-
-                DamageMonitor();
-            }
-        }
-
-    }
-
-    void CameraTurn()
-    {
-        Debug.Log("It's Camera crew's turn, Press C to change camera angle");
-    }
-    void CameraAttack()
-    {
-        if (Input.GetKeyDown(KeyCode.C))
-        {
-            bool physicalIsDead = bossUnit.bossTakePhysicalDamage(cameraUnit.physicalDamage);
-            bool magicalIsDead = bossUnit.bossTakeMagicalDamage(cameraUnit.magicalDamage);
-
-            if (physicalIsDead && magicalIsDead)
-            {
-                EndBattle(); // Game over
-            }
-            // Check if only one of them is dead
-            else if (physicalIsDead || magicalIsDead)
-            {
-                state = BattleState.INTERNTURN;
-                InternTurn();
-            }
-            else
-            {
-                state = BattleState.INTERNTURN;
-                InternTurn();
-            }
-            DamageMonitor();
-        }
-    }
-
-    void InternTurn()
-    {
-        Debug.Log("It's Intern's turn, Press O to do random things");
-    }
-    void InternAttack()
-    {
-        if (Input.GetKeyDown(KeyCode.O))
-        {
-            bool physicalIsDead = bossUnit.bossTakePhysicalDamage(internUnit.physicalDamage);
-            bool magicalIsDead = bossUnit.bossTakeMagicalDamage(internUnit.magicalDamage);
-
-            if (physicalIsDead && magicalIsDead)
-            {
-                EndBattle(); // Game over
-            }
-            // Check if only one of them is dead
-            else if (physicalIsDead || magicalIsDead)
-            {
-                state = BattleState.BOSSTURN;
-                BossTurn();
-            }
-            else
-            {
-                state = BattleState.BOSSTURN;
-                BossTurn();
-            }
-            DamageMonitor();
-        }
-    }
-
-    void EndBattle()
-    {
-        if (state == BattleState.WON)
-        {
-            Debug.Log("You Win The JRPG Battle!");
-        }
-        else if (state == BattleState.LOST)
-        {
-            Debug.Log("You Are So WEAK! You Lost!");
-        }
-    }
-
+   
     void DamageMonitor()
     {
         if (DamageMonitorOn == true)
@@ -677,7 +690,7 @@ public class BattleSystem : MonoBehaviour
             //show all stats
             Debug.Log("Team Physical HP: " + teamphysicalHP + " " + "Team Magical HP: " + teamMagicalHP);
             Debug.Log("Boss physical HP: " + bossUnit.currentPhysicalHP + " " + "Boss magical HP: " + bossUnit.currentMagicalHP);
-            Debug.Log("Inspiration:" + soundUnit.inspirationBar + " " + "InspirationFull is" + inspirationFull);
+            //Debug.Log("Inspiration:" + soundUnit.inspirationBar + " " + "InspirationFull is" + inspirationFull);
         }
     }
 }  
