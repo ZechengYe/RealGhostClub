@@ -58,20 +58,31 @@ PrefabInstance:
       propertyPath: m_TagString
       value: SoundUnit
       objectReference: {fileID: 0}
+    - target: {fileID: 6950912834606960615, guid: 83548f0b10855cf4c83cec8d3e09ca61,
+        type: 3}
+      propertyPath: m_LocalScale.x
+      value: 1.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 8513901204820888837, guid: 83548f0b10855cf4c83cec8d3e09ca61,
+        type: 3}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: 21300000, guid: 844d2c67cd2c94e14be3c4f356f3f86f,
+        type: 3}
     - target: {fileID: 8513901204820888837, guid: 83548f0b10855cf4c83cec8d3e09ca61,
         type: 3}
       propertyPath: m_Color.b
-      value: 0
+      value: 0.4575472
       objectReference: {fileID: 0}
     - target: {fileID: 8513901204820888837, guid: 83548f0b10855cf4c83cec8d3e09ca61,
         type: 3}
       propertyPath: m_Color.g
-      value: 0.15544571
+      value: 0.65128034
       objectReference: {fileID: 0}
     - target: {fileID: 8513901204820888837, guid: 83548f0b10855cf4c83cec8d3e09ca61,
         type: 3}
       propertyPath: m_Color.r
-      value: 0.44025147
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 8814454597551379879, guid: 83548f0b10855cf4c83cec8d3e09ca61,
         type: 3}

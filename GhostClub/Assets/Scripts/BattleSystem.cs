@@ -4,6 +4,8 @@ using UnityEngine;
 using UnityEngine.UIElements;
 using UnityEngine.UI;
 using Slider = UnityEngine.UI.Slider;
+using Cinemachine;
+using TMPro;
 
 public enum BattleState 
 {
@@ -50,7 +52,19 @@ public class BattleSystem : MonoBehaviour
     Unit cameraUnit;
     Unit internUnit;
     Unit bossUnit;
-
+    
+    //Cameras for Cameraman
+    public CinemachineVirtualCamera vCam1;
+    public CinemachineVirtualCamera vCam2;
+    bool vCam1On = true;
+    
+    //Music for Soundguy
+    public AudioSource MusicSource;//The AudioSource component for playing music
+    public List<AudioClip> songs = new List<AudioClip>(); // List of songs to play
+    public float fadeTime = 1f; //Duration for the fade effect
+    private int currentSongIndex = -1; //Keeps track of the currently playing song
+    public int songPlaying = 0;
+    
     bool inspirationFull = false;
     #endregion
     private bool isTurnStart = true;
@@ -58,6 +72,9 @@ public class BattleSystem : MonoBehaviour
     //I put the shared health management system here instead of unit, so it's more manageable
     public int teamphysicalHP = 1000;
     public int teamMagicalHP = 500;
+    
+    //testing
+    public TextMeshProUGUI testingPrompts;
     public bool TakeSharedPhysicalDamage(int physicalDmg)
     {
         teamphysicalHP -= physicalDmg;
@@ -85,6 +102,12 @@ public class BattleSystem : MonoBehaviour
     {
         state = BattleState.START;
         Setup();
+        
+        // Optionally, start playing the initial song here
+        if (songs.Count > 0)
+        {
+            ChangeSong(0); // Start with the first song
+        }
     }
 
     void Update()
@@ -97,6 +120,7 @@ public class BattleSystem : MonoBehaviour
                 if (isTurnStart)
                 {
                     Debug.Log("It's Host's turn, Press Q to open skill tree");
+                    testingPrompts.text = "It's Host's turn, Press Q to open skill tree";
                     isTurnStart = false;
                 }
                 //just for now...to check if things work
@@ -110,6 +134,7 @@ public class BattleSystem : MonoBehaviour
                 if (isTurnStart)
                 {
                     Debug.Log("Host Press 1 to use skill 1, Press 2 to use skill2");
+                    testingPrompts.text = "Host Press 1 to use skill 1, Press 2 to use skill2";
                     isTurnStart = false;
                 }
 
@@ -127,6 +152,7 @@ public class BattleSystem : MonoBehaviour
                 if (isTurnStart)
                 {
                     Debug.Log("It's Summon's turn, Press E to open skill tree");
+                    testingPrompts.text = "It's Summon's turn, Press E to open skill tree";
                     isTurnStart = false;
                 }
                 //just for now...to check if things work
@@ -140,6 +166,7 @@ public class BattleSystem : MonoBehaviour
                 if (isTurnStart)
                 {
                     Debug.Log("Summon Press 1 to use skill 1, Press 2 to use skill2");
+                    testingPrompts.text = "Summon Press 1 to use skill 1, Press 2 to use skill2";
                     isTurnStart = false;
                 }
 
@@ -157,6 +184,7 @@ public class BattleSystem : MonoBehaviour
                 if (isTurnStart)
                 {
                     Debug.Log("It's Director's turn, Press W to open skill tree");
+                    testingPrompts.text = "It's Director's turn, Press W to open skill tree";
                     isTurnStart = false;
                 }
                 //just for now...to check if things work
@@ -170,6 +198,7 @@ public class BattleSystem : MonoBehaviour
                 if (isTurnStart)
                 {
                     Debug.Log("Director Press 1 & 2 to attack");
+                    testingPrompts.text = "Director Press 1 & 2 to attack";
                     isTurnStart = false;
                 }
                 if (Input.GetKeyDown(KeyCode.Alpha1))
@@ -186,6 +215,7 @@ public class BattleSystem : MonoBehaviour
                 if (isTurnStart)
                 {
                     Debug.Log("It's Sound's turn, Press S to open skill tree");
+                    testingPrompts.text = "It's Sound's turn, Press S to open skill tree";
                     isTurnStart = false;
                 }
                 if(Input.GetKeyDown(KeyCode.S))
@@ -198,9 +228,11 @@ public class BattleSystem : MonoBehaviour
                 if (isTurnStart)
                 {
                     Debug.Log("Sound, Press 1 & 2 to attack");
+                    testingPrompts.text = "Sound, Press 1 & 2 to attack";
                     if (inspirationFull)
                     {
                      Debug.Log("Inspiration Full, press 2 to use unique skill");
+                     testingPrompts.text = "Inspiration Full, press 2 to use unique skill";
                     }
                     isTurnStart = false;
                 }
@@ -218,6 +250,7 @@ public class BattleSystem : MonoBehaviour
                 if (isTurnStart)
                 {
                     Debug.Log("It's Camera's turn, Press C to open skill tree");
+                    testingPrompts.text = "It's Camera's turn, Press C to open skill tree";
                     isTurnStart = false;
                 }
                 if(Input.GetKeyDown(KeyCode.C))
@@ -230,6 +263,7 @@ public class BattleSystem : MonoBehaviour
                 if (isTurnStart)
                 {
                     Debug.Log("It's Camera's turn, Press 1 & 2 to use skills");
+                    testingPrompts.text = "It's Camera's turn, Press 1 & 2 to use skills";
                     isTurnStart = false;
                 }
                 if (Input.GetKeyDown(KeyCode.Alpha1))
@@ -246,6 +280,7 @@ public class BattleSystem : MonoBehaviour
                 if (isTurnStart)
                 {
                     Debug.Log("It's Intern's turn, Press I to open skill tree");
+                    testingPrompts.text = "It's Intern's turn, Press I to open skill tree";
                     isTurnStart = false;
                 }
                 if(Input.GetKeyDown(KeyCode.I))
@@ -258,6 +293,7 @@ public class BattleSystem : MonoBehaviour
                 if (isTurnStart)
                 {
                     Debug.Log("It's Intern's turn, Press 1 & 2 to use skills");
+                    testingPrompts.text = "It's Intern's turn, Press 1 & 2 to use skills";
                     isTurnStart = false;
                 }
 
@@ -275,6 +311,7 @@ public class BattleSystem : MonoBehaviour
                 if (isTurnStart)
                 {
                     Debug.Log("It's Boss's turn");
+                    testingPrompts.text = "It's Boss's turn";
                     isTurnStart = false;
                     BossSkill_A();
                 }
@@ -282,10 +319,12 @@ public class BattleSystem : MonoBehaviour
 
             case BattleState.WON:
                 Debug.Log("You Win The JRPG Battle!");
+                testingPrompts.text = "You Win The JRPG Battle!";
                 break;
 
             case BattleState.LOST:
                 Debug.Log("You LOST!");
+                testingPrompts.text = "You LOST!";
                 break;
         }
 
@@ -298,6 +337,16 @@ public class BattleSystem : MonoBehaviour
         else
         {
             SoundInspiration.value = 0;
+        }
+        if (vCam1On == true)
+        {
+            vCam1.Priority = 1;
+            vCam2.Priority = 0;
+        }
+        else
+        {
+            vCam2.Priority = 1;
+            vCam1.Priority = 0;
         }
         
     }
@@ -436,6 +485,17 @@ public class BattleSystem : MonoBehaviour
     
     void SoundSkill_A()
     {
+        if (songPlaying >= songs.Count -1)
+        {
+            songPlaying = 0;
+        }
+        else
+        {
+            songPlaying += 1;
+        }
+        
+        ChangeSong(songPlaying);
+
         Debug.Log("Sound Damaged Boss Skill 1");
 
         bool physicalIsDead = bossUnit.bossTakePhysicalDamage(soundUnit.physicalDamage);
@@ -490,6 +550,8 @@ public class BattleSystem : MonoBehaviour
     
     void CameraSkill_A()
     {
+        vCam1On = !vCam1On;
+        
         Debug.Log("Camera Uses Skill 1");
         bool physicalIsDead = bossUnit.bossTakePhysicalDamage(cameraUnit.physicalDamage);
         bool magicalIsDead = bossUnit.bossTakeMagicalDamage(cameraUnit.magicalDamage);
@@ -693,4 +755,43 @@ public class BattleSystem : MonoBehaviour
             //Debug.Log("Inspiration:" + soundUnit.inspirationBar + " " + "InspirationFull is" + inspirationFull);
         }
     }
+    
+    //took this from our studio 2 project, we can adjust it later and maybe simplify it if it's weird
+    public void ChangeSong(int newSongIndex)
+    {
+        if (newSongIndex != currentSongIndex && newSongIndex < songs.Count)
+        {
+            StartCoroutine(FadeChangeSong(newSongIndex));
+        }
+    }    
+    private IEnumerator FadeChangeSong(int newSongIndex)
+    {
+        // Fade out the current song if it's playing
+        if (currentSongIndex != -1)
+        {
+            for (float t = 0; t < fadeTime; t += Time.deltaTime)
+            {
+                MusicSource.volume = (1 - t / fadeTime);
+                yield return null;
+            }
+            MusicSource.Stop();
+            MusicSource.volume = 1; // Reset volume
+        }
+
+        // Update the current song index
+        currentSongIndex = newSongIndex;
+
+        // Set the new song and fade it in
+        MusicSource.clip = songs[newSongIndex];
+        MusicSource.Play();
+
+        MusicSource.volume = 0; // Start at 0 volume to fade in
+        for (float t = 0; t < fadeTime; t += Time.deltaTime)
+        { MusicSource.volume = t / fadeTime;
+            yield return null;
+        }
+
+        MusicSource.volume = 1; // Ensure volume is back to full after fade in
+    }
+    
 }  

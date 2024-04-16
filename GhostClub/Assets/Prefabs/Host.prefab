@@ -52,6 +52,8 @@ MonoBehaviour:
   maxMagicalHP: 0
   currentPhysicalHP: 50
   currentMagicalHP: 0
+  inspirationBar: 0
+  maxInspirationBar: 0
 --- !u!1 &4427322185094172406
 GameObject:
   m_ObjectHideFlags: 0
@@ -62,6 +64,7 @@ GameObject:
   m_Component:
   - component: {fileID: 6950912834606960615}
   - component: {fileID: 8513901204820888837}
+  - component: {fileID: 4013228795766382163}
   m_Layer: 0
   m_Name: TestSprite-sheet
   m_TagString: Untagged
@@ -79,7 +82,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 2.19, y: 2.21, z: -1.02}
-  m_LocalScale: {x: 5, y: 10, z: 0}
+  m_LocalScale: {x: -1.5, y: 1.5, z: 0}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 8814454597551379879}
@@ -125,8 +128,8 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Sprite: {fileID: 21300000, guid: 30c570c20fcc171488e9c23c80a511d9, type: 3}
-  m_Color: {r: 0.60296774, g: 0, b: 1, a: 1}
+  m_Sprite: {fileID: 21300000, guid: b4e2309edb86343cdb303bf7d615bc71, type: 3}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
@@ -136,3 +139,15 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!114 &4013228795766382163
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4427322185094172406}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f4599c440d199490988a2ad82b4c713b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
