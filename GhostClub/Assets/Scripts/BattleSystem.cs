@@ -6,6 +6,7 @@ using UnityEngine.UI;
 using Slider = UnityEngine.UI.Slider;
 using Cinemachine;
 using TMPro;
+using Unity.VisualScripting;
 
 public enum BattleState 
 {
@@ -61,17 +62,23 @@ public class BattleSystem : MonoBehaviour
     //Music for Soundguy
     public AudioSource MusicSource;//The AudioSource component for playing music
     public List<AudioClip> songs = new List<AudioClip>(); // List of songs to play
-    public float fadeTime = 1f; //Duration for the fade effect
+
+    public float fadeTime = 0.05f; //Duration for the fade effect, Ezreal made it 0.05
+    
     private int currentSongIndex = -1; //Keeps track of the currently playing song
     public int songPlaying = 0;
     
     bool inspirationFull = false;
+    private bool isGamePaused = false;
     #endregion
     private bool isTurnStart = true;
+    private bool canUseAlpha1 = true; 
 
     //I put the shared health management system here instead of unit, so it's more manageable
     public int teamphysicalHP = 1000;
+    public int maxTeamPhysicalHP = 1000;
     public int teamMagicalHP = 500;
+    public int maxTeamMagicalHP = 500;
     
     //testing
     public TextMeshProUGUI testingPrompts;
@@ -200,15 +207,34 @@ public class BattleSystem : MonoBehaviour
                     Debug.Log("Director Press 1 & 2 to attack");
                     testingPrompts.text = "Director Press 1 & 2 to attack";
                     isTurnStart = false;
+                    canUseAlpha1 = true;
                 }
-                if (Input.GetKeyDown(KeyCode.Alpha1))
+                if (Input.GetKeyDown(KeyCode.Alpha1) && canUseAlpha1)
                 {
                     DirectorSkill_A();  
                 }
-                if (Input.GetKeyDown(KeyCode.Alpha2))
+                if (Input.GetKeyDown(KeyCode.Alpha2))//it's the pause switch
                 {
-                    DirectorSkill_B();  
+                    if(!isGamePaused)
+                    {
+                        Time.timeScale = 0f;
+                        isGamePaused = true;
+                        canUseAlpha1 = false;
+                        Debug.Log("Paused, Press 3 to proceed");
+                        //you can put the pause UI here
+                    }
                 }
+                //the player has to press 3 to proceed to next stage
+                if (isGamePaused && Input.GetKeyDown(KeyCode.Alpha3))
+                {   
+                    //resume the game & does something such as stop boss behavior 
+                    Time.timeScale = 1.0f;
+                    isGamePaused = false;
+                    Debug.Log("Game Resumed");
+                    
+                    //we only need transition function here, but I also want it to do some damage check or functions, transition included in this function
+                    DirectorSkill_B();
+                }       
                 break;
             
             case BattleState.SOUNDTURN:
@@ -462,10 +488,9 @@ public class BattleSystem : MonoBehaviour
     }
     void DirectorSkill_B()
     {
-        Debug.Log("Director Damaged Boss Skill 2");
+        //add future function to stop boss behavior
         bool physicalIsDead = bossUnit.bossTakePhysicalDamage(directorUnit.physicalDamage);
         bool magicalIsDead = bossUnit.bossTakeMagicalDamage(directorUnit.magicalDamage);
-            //check if boss is dead or if the current bar reaches 0
 
         if (physicalIsDead && magicalIsDead)
         {
@@ -480,22 +505,11 @@ public class BattleSystem : MonoBehaviour
         {
             TransitionToNextTurn();
         }
-        DamageMonitor();    
+            DamageMonitor();   
     }
-    
+
     void SoundSkill_A()
     {
-        if (songPlaying >= songs.Count -1)
-        {
-            songPlaying = 0;
-        }
-        else
-        {
-            songPlaying += 1;
-        }
-        
-        ChangeSong(songPlaying);
-
         Debug.Log("Sound Damaged Boss Skill 1");
 
         bool physicalIsDead = bossUnit.bossTakePhysicalDamage(soundUnit.physicalDamage);
@@ -521,7 +535,17 @@ public class BattleSystem : MonoBehaviour
     {
         if (inspirationFull)
         {   
-            Debug.Log("Sound Damaged Boss Skill 2");
+            if (songPlaying >= songs.Count -1)
+            {
+                songPlaying = 0;
+            }
+            else
+            {
+                songPlaying += 1;
+            }
+        
+            ChangeSong(songPlaying);
+
             Debug.Log("Music Changed");
                 //reset the inspiration bar
             soundUnit.inspirationBar = 0;
@@ -548,10 +572,9 @@ public class BattleSystem : MonoBehaviour
         }
     }
     
+    //I made switch camera skill into skill_B, so that every Skill_A is normal attack and Skill_B is skill
     void CameraSkill_A()
-    {
-        vCam1On = !vCam1On;
-        
+    {   
         Debug.Log("Camera Uses Skill 1");
         bool physicalIsDead = bossUnit.bossTakePhysicalDamage(cameraUnit.physicalDamage);
         bool magicalIsDead = bossUnit.bossTakeMagicalDamage(cameraUnit.magicalDamage);
@@ -572,6 +595,7 @@ public class BattleSystem : MonoBehaviour
     }
     void CameraSkill_B()
     {
+        vCam1On = !vCam1On;
         Debug.Log("Camera Uses Skill 2");
         bool physicalIsDead = bossUnit.bossTakePhysicalDamage(cameraUnit.physicalDamage);
         bool magicalIsDead = bossUnit.bossTakeMagicalDamage(cameraUnit.magicalDamage);
@@ -613,7 +637,28 @@ public class BattleSystem : MonoBehaviour
     }
     void InternSkill_B()
     {
-        Debug.Log("Intern Uses Skill 2");
+        Debug.Log("Intern Lucky Time Skill 2");
+        //basically have a 50% chance to either increase or decrease health
+        //I didn't include magical health because it doesn't make sense for an intern to be able to influence our majesty (summon);
+        int chance = Random.Range(0, 2);
+        if (chance == 0)
+        {
+            teamphysicalHP -= 100;
+            Debug.Log("A o! Damn!");
+        }
+        
+        else if (teamphysicalHP + 50 > maxTeamPhysicalHP )
+        {
+            teamphysicalHP = maxTeamPhysicalHP; 
+            Debug.Log("Capped Max Health");
+        }
+
+        else
+        {
+            teamphysicalHP += 100;
+            Debug.Log("Yeah Nice Intern but we underpay you!");
+        }
+
         bool physicalIsDead = bossUnit.bossTakePhysicalDamage(internUnit.physicalDamage);
         bool magicalIsDead = bossUnit.bossTakeMagicalDamage(internUnit.magicalDamage);
 

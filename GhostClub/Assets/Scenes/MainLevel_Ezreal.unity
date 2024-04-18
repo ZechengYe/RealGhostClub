@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.23102415, g: 0.16923964, b: 0.48342046, a: 1}
+  m_IndirectSpecularColor: {r: 0.23102443, g: 0.16923988, b: 0.48342097, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -2241,7 +2241,9 @@ MonoBehaviour:
   fadeTime: 1
   songPlaying: 0
   teamphysicalHP: 1000
+  maxTeamPhysicalHP: 1000
   teamMagicalHP: 500
+  maxTeamMagicalHP: 500
   testingPrompts: {fileID: 2115313560}
 --- !u!1001 &1025167586
 PrefabInstance:
