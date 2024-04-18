@@ -7,6 +7,7 @@ using Slider = UnityEngine.UI.Slider;
 using Cinemachine;
 using TMPro;
 using Unity.VisualScripting;
+using UnityEngine.InputSystem; 
 
 public enum BattleState 
 {
@@ -80,6 +81,8 @@ public class BattleSystem : MonoBehaviour
     public int teamMagicalHP = 500;
     public int maxTeamMagicalHP = 500;
     
+    private string uiMessage; 
+    
     //testing
     public TextMeshProUGUI testingPrompts;
     public bool TakeSharedPhysicalDamage(int physicalDmg)
@@ -107,6 +110,13 @@ public class BattleSystem : MonoBehaviour
     
     void Start()
     {
+        //this function show the name of all connected controllers
+        for (int i = 0; i < Gamepad.all.Count; i++)
+        {
+            Debug.Log(Gamepad.all[i].name);
+        }
+
+        //set game state
         state = BattleState.START;
         Setup();
         
@@ -126,12 +136,11 @@ public class BattleSystem : MonoBehaviour
             case BattleState.HOSTTURN:
                 if (isTurnStart)
                 {
-                    Debug.Log("It's Host's turn, Press Q to open skill tree");
-                    testingPrompts.text = "It's Host's turn, Press Q to open skill tree";
+                    UpdateUIText("It's Host's turn, Press Q/leftShoulder to open skill tree");
                     isTurnStart = false;
                 }
-                //just for now...to check if things work
-                if(Input.GetKeyDown(KeyCode.Q))
+
+                if(Input.GetKeyDown(KeyCode.Q) || Gamepad.all[0].leftShoulder.isPressed)
                 {
                     TransitionToNextTurn();
                 }    
@@ -140,30 +149,28 @@ public class BattleSystem : MonoBehaviour
             case BattleState.HOSTMENU:
                 if (isTurnStart)
                 {
-                    Debug.Log("Host Press 1 to use skill 1, Press 2 to use skill2");
-                    testingPrompts.text = "Host Press 1 to use skill 1, Press 2 to use skill2";
+                    UpdateUIText("Host Press 1/left to use skill 1, Press 2/right to use skill2");
                     isTurnStart = false;
                 }
 
-                if (Input.GetKeyDown(KeyCode.Alpha1))
+                if (Input.GetKeyDown(KeyCode.Alpha1) || Gamepad.all[0].dpad.left.isPressed)
                 {
-                    HostSkill_A();// Moves to SUMMONTURN after action
+                    HostSkill_A();
                 }
-                if (Input.GetKeyDown(KeyCode.Alpha2))
+                if (Input.GetKeyDown(KeyCode.Alpha2) || Gamepad.all[0].dpad.right.isPressed)
                 {
-                    HostSkill_B();// Moves to SUMMONTURN after action
+                    HostSkill_B();
                 }
                 break;
 
             case BattleState.SUMMONTURN:
                 if (isTurnStart)
                 {
-                    Debug.Log("It's Summon's turn, Press E to open skill tree");
-                    testingPrompts.text = "It's Summon's turn, Press E to open skill tree";
+                    UpdateUIText("It's Summon's turn, Press E/rightshoulder to open skill tree");
                     isTurnStart = false;
                 }
                 //just for now...to check if things work
-                if(Input.GetKeyDown(KeyCode.E))
+                if(Input.GetKeyDown(KeyCode.E) || Gamepad.all[0].rightShoulder.isPressed)
                 {
                     TransitionToNextTurn();
                 }    
@@ -172,16 +179,15 @@ public class BattleSystem : MonoBehaviour
             case BattleState.SUMMONMENU:
                 if (isTurnStart)
                 {
-                    Debug.Log("Summon Press 1 to use skill 1, Press 2 to use skill2");
-                    testingPrompts.text = "Summon Press 1 to use skill 1, Press 2 to use skill2";
+                    UpdateUIText("Summon Press 1/left to use skill 1, Press 2/right to use skill2");
                     isTurnStart = false;
                 }
 
-                if (Input.GetKeyDown(KeyCode.Alpha1))
+                if (Input.GetKeyDown(KeyCode.Alpha1) || Gamepad.all[0].dpad.left.isPressed)
                 {
                     SummonSkill_A();
                 }
-                if (Input.GetKeyDown(KeyCode.Alpha2))
+                if (Input.GetKeyDown(KeyCode.Alpha2) || Gamepad.all[0].dpad.right.isPressed)
                 {
                     SummonSkill_B();
                 }
@@ -190,12 +196,11 @@ public class BattleSystem : MonoBehaviour
             case BattleState.DIRECTORTURN:
                 if (isTurnStart)
                 {
-                    Debug.Log("It's Director's turn, Press W to open skill tree");
-                    testingPrompts.text = "It's Director's turn, Press W to open skill tree";
+                    UpdateUIText("It's Director's turn, Press W/triangle to open skill tree");
                     isTurnStart = false;
                 }
                 //just for now...to check if things work
-                if(Input.GetKeyDown(KeyCode.W))
+                if(Input.GetKeyDown(KeyCode.W) || Gamepad.all[0].buttonNorth.isPressed)
                 {
                     TransitionToNextTurn();
                 }    
@@ -204,33 +209,32 @@ public class BattleSystem : MonoBehaviour
             case BattleState.DIRECTORMENU:
                 if (isTurnStart)
                 {
-                    Debug.Log("Director Press 1 & 2 to attack");
-                    testingPrompts.text = "Director Press 1 & 2 to attack";
+                    UpdateUIText("Director Press 1/left or 2/right to attack");
                     isTurnStart = false;
                     canUseAlpha1 = true;
                 }
-                if (Input.GetKeyDown(KeyCode.Alpha1) && canUseAlpha1)
+                if ((Input.GetKeyDown(KeyCode.Alpha1) || Gamepad.all[0].dpad.left.isPressed) && canUseAlpha1)
                 {
                     DirectorSkill_A();  
                 }
-                if (Input.GetKeyDown(KeyCode.Alpha2))//it's the pause switch
+                if (Input.GetKeyDown(KeyCode.Alpha2) || Gamepad.all[0].dpad.right.isPressed)//it's the pause switch
                 {
                     if(!isGamePaused)
                     {
                         Time.timeScale = 0f;
                         isGamePaused = true;
                         canUseAlpha1 = false;
-                        Debug.Log("Paused, Press 3 to proceed");
+                        UpdateUIText("Paused, Press 3/triangle again to proceed");
                         //you can put the pause UI here
                     }
                 }
                 //the player has to press 3 to proceed to next stage
-                if (isGamePaused && Input.GetKeyDown(KeyCode.Alpha3))
+                if ((Input.GetKeyDown(KeyCode.Alpha3) || Gamepad.all[0].buttonNorth.isPressed) && isGamePaused)
                 {   
                     //resume the game & does something such as stop boss behavior 
                     Time.timeScale = 1.0f;
                     isGamePaused = false;
-                    Debug.Log("Game Resumed");
+                    UpdateUIText("Game Resumed");
                     
                     //we only need transition function here, but I also want it to do some damage check or functions, transition included in this function
                     DirectorSkill_B();
@@ -240,11 +244,10 @@ public class BattleSystem : MonoBehaviour
             case BattleState.SOUNDTURN:
                 if (isTurnStart)
                 {
-                    Debug.Log("It's Sound's turn, Press S to open skill tree");
-                    testingPrompts.text = "It's Sound's turn, Press S to open skill tree";
+                    UpdateUIText("It's Sound's turn, Press S/circle to open skill tree");
                     isTurnStart = false;
                 }
-                if(Input.GetKeyDown(KeyCode.S))
+                if(Input.GetKeyDown(KeyCode.S) || Gamepad.all[0].buttonEast.isPressed)
                 {
                     TransitionToNextTurn();
                 }    
@@ -253,20 +256,18 @@ public class BattleSystem : MonoBehaviour
             case BattleState.SOUNDMENU:
                 if (isTurnStart)
                 {
-                    Debug.Log("Sound, Press 1 & 2 to attack");
-                    testingPrompts.text = "Sound, Press 1 & 2 to attack";
+                    UpdateUIText("Sound, Press 1/left & 2/right to attack");
                     if (inspirationFull)
                     {
-                     Debug.Log("Inspiration Full, press 2 to use unique skill");
-                     testingPrompts.text = "Inspiration Full, press 2 to use unique skill";
+                        UpdateUIText("Inspiration Full, press 2/right to use unique skill");
                     }
                     isTurnStart = false;
                 }
-                if (Input.GetKeyDown(KeyCode.Alpha1))
+                if (Input.GetKeyDown(KeyCode.Alpha1) || Gamepad.all[0].dpad.left.isPressed)
                 {
                     SoundSkill_A();
                 }
-                if (Input.GetKeyDown(KeyCode.Alpha2))
+                if (Input.GetKeyDown(KeyCode.Alpha2) || Gamepad.all[0].dpad.right.isPressed)
                 {
                     SoundSkill_B();
                 }
@@ -275,11 +276,10 @@ public class BattleSystem : MonoBehaviour
             case BattleState.CAMERATURN:
                 if (isTurnStart)
                 {
-                    Debug.Log("It's Camera's turn, Press C to open skill tree");
-                    testingPrompts.text = "It's Camera's turn, Press C to open skill tree";
+                    UpdateUIText("It's Camera's turn, Press C/square to open skill tree");
                     isTurnStart = false;
                 }
-                if(Input.GetKeyDown(KeyCode.C))
+                if(Input.GetKeyDown(KeyCode.C) || Gamepad.all[0].buttonWest.isPressed)
                 {
                     TransitionToNextTurn();
                 }    
@@ -288,15 +288,14 @@ public class BattleSystem : MonoBehaviour
             case BattleState.CAMERAMENU:
                 if (isTurnStart)
                 {
-                    Debug.Log("It's Camera's turn, Press 1 & 2 to use skills");
-                    testingPrompts.text = "It's Camera's turn, Press 1 & 2 to use skills";
+                    UpdateUIText("It's Camera's turn, Press 1/left & 2/right to use skills");
                     isTurnStart = false;
                 }
-                if (Input.GetKeyDown(KeyCode.Alpha1))
+                if (Input.GetKeyDown(KeyCode.Alpha1) || Gamepad.all[0].dpad.left.isPressed)
                 {
                     CameraSkill_A();
                 }
-                if (Input.GetKeyDown(KeyCode.Alpha2))
+                if (Input.GetKeyDown(KeyCode.Alpha2) || Gamepad.all[0].dpad.right.isPressed)
                 {
                     CameraSkill_B();
                 }
@@ -305,11 +304,10 @@ public class BattleSystem : MonoBehaviour
             case BattleState.INTERNTURN:
                 if (isTurnStart)
                 {
-                    Debug.Log("It's Intern's turn, Press I to open skill tree");
-                    testingPrompts.text = "It's Intern's turn, Press I to open skill tree";
+                    UpdateUIText("It's Intern's turn, Press I/ X Button to open skill tree");
                     isTurnStart = false;
                 }
-                if(Input.GetKeyDown(KeyCode.I))
+                if(Input.GetKeyDown(KeyCode.I) || Gamepad.all[0].buttonSouth.isPressed)
                 {
                     TransitionToNextTurn();
                 }    
@@ -318,16 +316,15 @@ public class BattleSystem : MonoBehaviour
             case BattleState.INTERNMENU:
                 if (isTurnStart)
                 {
-                    Debug.Log("It's Intern's turn, Press 1 & 2 to use skills");
-                    testingPrompts.text = "It's Intern's turn, Press 1 & 2 to use skills";
+                    UpdateUIText("It's Intern's turn, Press 1/left & 2/right to use skills");
                     isTurnStart = false;
                 }
 
-                if (Input.GetKeyDown(KeyCode.Alpha1))
+                if (Input.GetKeyDown(KeyCode.Alpha1) || Gamepad.all[0].dpad.left.isPressed)
                 {
                     InternSkill_A();
                 }
-                if (Input.GetKeyDown(KeyCode.Alpha2))
+                if (Input.GetKeyDown(KeyCode.Alpha2) || Gamepad.all[0].dpad.right.isPressed)
                 {
                     InternSkill_B();
                 }
@@ -336,21 +333,18 @@ public class BattleSystem : MonoBehaviour
             case BattleState.BOSSTURN:
                 if (isTurnStart)
                 {
-                    Debug.Log("It's Boss's turn");
-                    testingPrompts.text = "It's Boss's turn";
+                    UpdateUIText("It's Boss's turn");
                     isTurnStart = false;
                     BossSkill_A();
                 }
                 break;
 
             case BattleState.WON:
-                Debug.Log("You Win The JRPG Battle!");
-                testingPrompts.text = "You Win The JRPG Battle!";
+                UpdateUIText("You Win The JRPG Battle!");
                 break;
 
             case BattleState.LOST:
-                Debug.Log("You LOST!");
-                testingPrompts.text = "You LOST!";
+                UpdateUIText("You LOST!");
                 break;
         }
 
@@ -839,4 +833,12 @@ public class BattleSystem : MonoBehaviour
         MusicSource.volume = 1; // Ensure volume is back to full after fade in
     }
     
+    private void UpdateUIText(string message)//this method sync debug and ui message
+    {
+        uiMessage = message;
+        testingPrompts.text = uiMessage; //update ui message 
+        Debug.Log(uiMessage); //show the updated message in console as well
+    }
+
+
 }  
