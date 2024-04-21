@@ -39,6 +39,20 @@ public class BattleSystem : MonoBehaviour
     //we can seperate the slider code later?
     public Slider SoundInspiration;
     
+    //health sliders
+    
+    public Slider bossHealth01;
+    public Slider bossHealth02;
+    public Slider bossHealth03;
+    public Slider bossHealth04;
+    
+    public Slider bossSpirit01;
+    public Slider bossSpirit02;
+    public Slider bossSpirit03;
+    public Slider bossSpirit04;
+
+    public Slider TeamHealth;
+    
     public Transform hostBattleStation;
     public Transform summonBattleStation;
     public Transform directorBattleStation;
@@ -125,6 +139,7 @@ public class BattleSystem : MonoBehaviour
         {
             ChangeSong(0); // Start with the first song
         }
+        
     }
 
     void Update()
@@ -270,6 +285,7 @@ public class BattleSystem : MonoBehaviour
                 if (Input.GetKeyDown(KeyCode.Alpha2) || Gamepad.all[0].dpad.right.isPressed)
                 {
                     SoundSkill_B();
+                    Debug.Log("dpad pressed");
                 }
                 break;
 
@@ -368,6 +384,45 @@ public class BattleSystem : MonoBehaviour
             vCam2.Priority = 1;
             vCam1.Priority = 0;
         }
+        //team health bar
+
+        TeamHealth.value = teamphysicalHP;
+        
+    //this is tracking the health of boss to the sliders
+        if (bossUnit.currentPhysicalHP >= 300 & bossUnit.currentPhysicalHP <= 400)
+        {
+            bossHealth04.value = bossUnit.currentPhysicalHP;
+        }
+        if (bossUnit.currentPhysicalHP >= 200 & bossUnit.currentPhysicalHP <= 300)
+        {
+            bossHealth03.value = bossUnit.currentPhysicalHP;
+        }
+        if (bossUnit.currentPhysicalHP >= 100 & bossUnit.currentPhysicalHP <= 200)
+        {
+            bossHealth02.value = bossUnit.currentPhysicalHP;
+        }
+        if (bossUnit.currentPhysicalHP >= 0 && bossUnit.currentPhysicalHP <= 100)
+        {
+            bossHealth02.value = bossUnit.currentPhysicalHP;
+        }
+    //this is tracking the spirit health of boss to the sliders    
+    if (bossUnit.currentMagicalHP >= 300 & bossUnit.currentMagicalHP <= 400)
+    {
+        bossSpirit04.value = bossUnit.currentMagicalHP;
+    }
+    if (bossUnit.currentMagicalHP >= 200 & bossUnit.currentMagicalHP <= 300)
+    {
+        bossSpirit03.value = bossUnit.currentMagicalHP;
+    }
+    if (bossUnit.currentMagicalHP >= 100 & bossUnit.currentMagicalHP <= 200)
+    {
+        bossSpirit02.value = bossUnit.currentMagicalHP;
+    }
+    if (bossUnit.currentMagicalHP >= 0 && bossUnit.currentMagicalHP <= 100)
+    {
+        bossSpirit02.value = bossUnit.currentMagicalHP;
+    }
+        
         
     }
 
