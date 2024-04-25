@@ -164,7 +164,7 @@ public class BattleSystem : MonoBehaviour
             case BattleState.HOSTMENU:
                 if (isTurnStart)
                 {
-                    UpdateUIText("Host Press 1/left to use skill 1, Press 2/right to use skill2");
+                    UpdateUIText("left to use skill 1,right to use skill2, Left & Right Shoulder Combo when inspiration full");
                     isTurnStart = false;
                 }
 
@@ -172,9 +172,15 @@ public class BattleSystem : MonoBehaviour
                 {
                     HostSkill_A();
                 }
+                
                 if (Input.GetKeyDown(KeyCode.Alpha2) || Gamepad.all[0].dpad.right.isPressed)
                 {
                     HostSkill_B();
+                }
+
+                if (Gamepad.all[0].leftShoulder.isPressed && Gamepad.all[0].rightShoulder.isPressed)
+                {
+                    HostComboAttack();
                 }
                 break;
 
@@ -351,7 +357,25 @@ public class BattleSystem : MonoBehaviour
                 {
                     UpdateUIText("It's Boss's turn");
                     isTurnStart = false;
-                    BossSkill_A();
+                    
+                    int skillChoice = Random.Range(0, 4);
+
+                    //boss has 4 skills and it's randomly chosen
+                    switch(skillChoice)
+                    {
+                        case 0:
+                            BossSkill_A();
+                            break;
+                        case 1:
+                            BossSkill_B();
+                            break;
+                        case 2:
+                            BossSkill_C();
+                            break;
+                        case 3:
+                            BossSkill_D();
+                            break;
+                    }
                 }
                 break;
 
@@ -470,6 +494,36 @@ public class BattleSystem : MonoBehaviour
             DamageMonitor();
     }
     
+    void HostComboAttack()
+    {
+        if (inspirationFull)
+        {   
+            soundUnit.inspirationBar = 0;
+            inspirationFull = false;
+
+            //take summon & host attack
+            bool physicalIsDead = bossUnit.TakePhysicalDamage(hostUnit.physicalDamage, this);
+            bool magicalIsDead = bossUnit.TakeMagicalDamage(summonUnit.magicalDamage, this);
+
+            if (physicalIsDead && magicalIsDead)
+            {
+                EndBattle(); // Game over
+            }
+                // Check if only one of them is dead
+            else if (physicalIsDead || magicalIsDead)
+            {
+                TransitionToNextTurn();
+            }
+            else
+            {
+                TransitionToNextTurn();
+            }
+
+            DamageMonitor();
+        }
+    }
+
+
     void SummonSkill_A()
     {   
         Debug.Log("Summon Damaged Boss by Skill 1");
@@ -747,6 +801,66 @@ public class BattleSystem : MonoBehaviour
         }
         DamageMonitor();
     }
+
+    void BossSkill_B()
+    {
+        Debug.Log("Boss uses Skill 2");
+        //deal double physical damage
+        bool isDead = soundUnit.TakePhysicalDamage(bossUnit.physicalDamage * 2, this);
+        bool summonisDead = summonUnit.TakeMagicalDamage(bossUnit.magicalDamage, this);
+        inspirationFull = soundUnit.UpdateInspirationBar(bossUnit.physicalDamage);
+        //check if the character is dead
+        if (isDead || summonisDead)
+        {
+            state = BattleState.LOST;
+            EndBattle();
+        }
+        else
+        {
+            TransitionToNextTurn();
+        }
+        DamageMonitor();
+    }
+
+    void BossSkill_C()
+    {
+        Debug.Log("Boss uses Skill 3");
+        //deal double physical damage
+        bool isDead = soundUnit.TakePhysicalDamage(bossUnit.physicalDamage, this);
+        bool summonisDead = summonUnit.TakeMagicalDamage(bossUnit.magicalDamage *2, this);
+        inspirationFull = soundUnit.UpdateInspirationBar(bossUnit.physicalDamage);
+        //check if the character is dead
+        if (isDead || summonisDead)
+        {
+            state = BattleState.LOST;
+            EndBattle();
+        }
+        else
+        {
+            TransitionToNextTurn();
+        }
+        DamageMonitor();
+    }
+    
+        void BossSkill_D()
+    {
+        Debug.Log("Boss uses Skill 4");
+        //deal double physical damage
+        bool isDead = soundUnit.TakePhysicalDamage(bossUnit.physicalDamage *2, this);
+        bool summonisDead = summonUnit.TakeMagicalDamage(bossUnit.magicalDamage *2, this);
+        inspirationFull = soundUnit.UpdateInspirationBar(bossUnit.physicalDamage);
+        //check if the character is dead
+        if (isDead || summonisDead)
+        {
+            state = BattleState.LOST;
+            EndBattle();
+        }
+        else
+        {
+            TransitionToNextTurn();
+        }
+        DamageMonitor();
+    }
 #endregion
     
     void Setup()
@@ -846,7 +960,7 @@ public class BattleSystem : MonoBehaviour
             //show all stats
             Debug.Log("Team Physical HP: " + teamphysicalHP + " " + "Team Magical HP: " + teamMagicalHP);
             Debug.Log("Boss physical HP: " + bossUnit.currentPhysicalHP + " " + "Boss magical HP: " + bossUnit.currentMagicalHP);
-            //Debug.Log("Inspiration:" + soundUnit.inspirationBar + " " + "InspirationFull is" + inspirationFull);
+            Debug.Log("Inspiration:" + soundUnit.inspirationBar + " " + "InspirationFull is" + inspirationFull);
         }
     }
     
