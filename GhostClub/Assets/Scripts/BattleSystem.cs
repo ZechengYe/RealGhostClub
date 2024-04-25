@@ -123,6 +123,8 @@ public class BattleSystem : MonoBehaviour
     }
     
     public static bool bossWeak = false;
+    //maybe different music will have different boost such as double magic damage, etc
+    public SpriteRenderer bossSpriteRenderer;
 
     void Start()
     {
@@ -400,54 +402,9 @@ public class BattleSystem : MonoBehaviour
         {
             SoundInspiration.value = 0;
         }
-        if (vCam1On == true)
-        {
-            vCam1.Priority = 1;
-            vCam2.Priority = 0;
-        }
-        else
-        {
-            vCam2.Priority = 1;
-            vCam1.Priority = 0;
-        }
         //team health bar
 
-        TeamHealth.value = teamphysicalHP;
-        
-    //this is tracking the health of boss to the sliders
-        if (bossUnit.currentPhysicalHP >= 300 & bossUnit.currentPhysicalHP <= 400)
-        {
-            bossHealth04.value = bossUnit.currentPhysicalHP;
-        }
-        if (bossUnit.currentPhysicalHP >= 200 & bossUnit.currentPhysicalHP <= 300)
-        {
-            bossHealth03.value = bossUnit.currentPhysicalHP;
-        }
-        if (bossUnit.currentPhysicalHP >= 100 & bossUnit.currentPhysicalHP <= 200)
-        {
-            bossHealth02.value = bossUnit.currentPhysicalHP;
-        }
-        if (bossUnit.currentPhysicalHP >= 0 && bossUnit.currentPhysicalHP <= 100)
-        {
-            bossHealth02.value = bossUnit.currentPhysicalHP;
-        }
-    //this is tracking the spirit health of boss to the sliders    
-    if (bossUnit.currentMagicalHP >= 300 & bossUnit.currentMagicalHP <= 400)
-    {
-        bossSpirit04.value = bossUnit.currentMagicalHP;
-    }
-    if (bossUnit.currentMagicalHP >= 200 & bossUnit.currentMagicalHP <= 300)
-    {
-        bossSpirit03.value = bossUnit.currentMagicalHP;
-    }
-    if (bossUnit.currentMagicalHP >= 100 & bossUnit.currentMagicalHP <= 200)
-    {
-        bossSpirit02.value = bossUnit.currentMagicalHP;
-    }
-    if (bossUnit.currentMagicalHP >= 0 && bossUnit.currentMagicalHP <= 100)
-    {
-        bossSpirit02.value = bossUnit.currentMagicalHP;
-    }
+        updateBossHealth();
         
         
     }
@@ -701,6 +658,18 @@ public class BattleSystem : MonoBehaviour
     void CameraSkill_B()
     {
         vCam1On = !vCam1On;
+        if (vCam1On) 
+        {
+            vCam1.Priority = 1;
+            vCam2.Priority = 0;
+        } 
+        else 
+        {
+            vCam1.Priority = 0;
+            vCam2.Priority = 1;
+        }
+        SetBossVisibility(vCam2.Priority > vCam1.Priority);
+        //Player sees boss sprite after this line
         Debug.Log("Camera Uses Skill 2");
         bool physicalIsDead = bossUnit.bossTakePhysicalDamage(cameraUnit.physicalDamage);
         bool magicalIsDead = bossUnit.bossTakeMagicalDamage(cameraUnit.magicalDamage);
@@ -844,12 +813,13 @@ public class BattleSystem : MonoBehaviour
         DamageMonitor();
     }
     
-        void BossSkill_D()
+    void BossSkill_D()
     {
-        Debug.Log("Boss uses Skill 4");
-        //deal double physical damage
-        bool isDead = soundUnit.TakePhysicalDamage(bossUnit.physicalDamage *2, this);
-        bool summonisDead = summonUnit.TakeMagicalDamage(bossUnit.magicalDamage *2, this);
+        Debug.Log("Boss uses Skill 4 and disappeared");
+        //deal 1/3 damage & disappear 
+        SetBossVisibility(false);
+        bool isDead = soundUnit.TakePhysicalDamage(bossUnit.physicalDamage/3, this);
+        bool summonisDead = summonUnit.TakeMagicalDamage(bossUnit.magicalDamage/3, this);
         inspirationFull = soundUnit.UpdateInspirationBar(bossUnit.physicalDamage);
         //check if the character is dead
         if (isDead || summonisDead)
@@ -889,6 +859,7 @@ public class BattleSystem : MonoBehaviour
         //GO stands for gameobject
         GameObject bossGO = Instantiate(bossPrefab, bossBattleStation);
         bossUnit = bossGO.GetComponent<Unit>();
+        bossSpriteRenderer = bossGO.transform.Find("bossegg").GetComponent<SpriteRenderer>();
 
         state = BattleState.HOSTTURN;
     }
@@ -1012,5 +983,56 @@ public class BattleSystem : MonoBehaviour
         Debug.Log(uiMessage); //show the updated message in console as well
     }
 
+    public void SetBossVisibility(bool isVisible) 
+    {
+        if (bossSpriteRenderer != null) 
+        {
+            bossSpriteRenderer.enabled = isVisible;
+            Debug.Log("Setting boss visibility to " + isVisible);
+        }
+        else
+        {
+            Debug.LogError("Boss SpriteRenderer not found.");
+        }
+    }
+
+    void updateBossHealth()
+    {
+        TeamHealth.value = teamphysicalHP;
+        //this is tracking the health of boss to the sliders
+        if (bossUnit.currentPhysicalHP >= 300 & bossUnit.currentPhysicalHP <= 400)
+        {
+            bossHealth04.value = bossUnit.currentPhysicalHP;
+        }
+        if (bossUnit.currentPhysicalHP >= 200 & bossUnit.currentPhysicalHP <= 300)
+        {
+            bossHealth03.value = bossUnit.currentPhysicalHP;
+        }
+        if (bossUnit.currentPhysicalHP >= 100 & bossUnit.currentPhysicalHP <= 200)
+        {
+            bossHealth02.value = bossUnit.currentPhysicalHP;
+        }
+        if (bossUnit.currentPhysicalHP >= 0 && bossUnit.currentPhysicalHP <= 100)
+        {
+            bossHealth02.value = bossUnit.currentPhysicalHP;
+        }
+    //this is tracking the spirit health of boss to the sliders    
+        if (bossUnit.currentMagicalHP >= 300 & bossUnit.currentMagicalHP <= 400)
+        {
+            bossSpirit04.value = bossUnit.currentMagicalHP;
+        }
+        if (bossUnit.currentMagicalHP >= 200 & bossUnit.currentMagicalHP <= 300)
+        {
+            bossSpirit03.value = bossUnit.currentMagicalHP;
+        }
+        if (bossUnit.currentMagicalHP >= 100 & bossUnit.currentMagicalHP <= 200)
+        {
+            bossSpirit02.value = bossUnit.currentMagicalHP;
+        }
+        if (bossUnit.currentMagicalHP >= 0 && bossUnit.currentMagicalHP <= 100)
+        {
+            bossSpirit02.value = bossUnit.currentMagicalHP;
+        }
+    }
 
 }  

@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 1350700309524627232}
   - component: {fileID: 4279014373659204276}
   m_Layer: 0
-  m_Name: bossegg-idle_0
+  m_Name: bossegg
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

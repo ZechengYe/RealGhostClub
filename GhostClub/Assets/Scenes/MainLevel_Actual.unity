@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.091987625, g: 0.041469812, b: 0.26746693, a: 1}
+  m_IndirectSpecularColor: {r: 0.091963485, g: 0.0415125, b: 0.26735765, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -4499,8 +4499,8 @@ MonoBehaviour:
   MusicSource: {fileID: 234876867}
   songs:
   - {fileID: 8300000, guid: c60726ce44b5647bfbc2c071cff32277, type: 3}
-  - {fileID: 8300000, guid: 24655b8b9fd2c4d0da5176d61d4ef16e, type: 3}
   - {fileID: 8300000, guid: b05e9653b77a64831898aafc6afc9a8f, type: 3}
+  - {fileID: 8300000, guid: c60726ce44b5647bfbc2c071cff32277, type: 3}
   fadeTime: 0.5
   songPlaying: 0
   teamphysicalHP: 1000
@@ -4508,6 +4508,7 @@ MonoBehaviour:
   teamMagicalHP: 500
   maxTeamMagicalHP: 500
   testingPrompts: {fileID: 2115313560}
+  bossSpriteRenderer: {fileID: 0}
 --- !u!1001 &924002457
 PrefabInstance:
   m_ObjectHideFlags: 0
