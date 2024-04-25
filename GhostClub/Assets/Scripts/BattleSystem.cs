@@ -122,6 +122,8 @@ public class BattleSystem : MonoBehaviour
         return false;
     }
     
+    public static bool bossWeak = false;
+
     void Start()
     {
         //this function show the name of all connected controllers
@@ -970,6 +972,7 @@ public class BattleSystem : MonoBehaviour
         if (newSongIndex != currentSongIndex && newSongIndex < songs.Count)
         {
             StartCoroutine(FadeChangeSong(newSongIndex));
+             bossWeak = (newSongIndex == 1);
         }
     }    
     private IEnumerator FadeChangeSong(int newSongIndex)

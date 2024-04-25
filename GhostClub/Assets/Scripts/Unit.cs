@@ -31,7 +31,18 @@ public class Unit : MonoBehaviour
     //these are for boss
     public bool bossTakePhysicalDamage(int physicalDmg)
     {
-        currentPhysicalHP -= physicalDmg;
+
+        if(BattleSystem.bossWeak)
+        {
+            Debug.Log("Boss is weak now, double physical damage");
+            currentPhysicalHP -= physicalDmg * 2;
+        }
+        else 
+        {
+            currentPhysicalHP -= physicalDmg;
+            Debug.Log("Boss is not weak now, music matters.");
+        }
+
         if (currentPhysicalHP <= 0)
         {
             return true; // Indicates death
@@ -41,7 +52,15 @@ public class Unit : MonoBehaviour
     }
     public bool bossTakeMagicalDamage(int magicalDmg)
     {
-        currentMagicalHP -= magicalDmg;
+        if(BattleSystem.bossWeak)
+        {
+            Debug.Log("Boss is weak now, double magical damage");
+            currentMagicalHP -= magicalDmg * 2;
+        }
+        else
+        {
+            currentMagicalHP -= magicalDmg;
+        }
         if (currentMagicalHP <= 0)
         {
             return true; // Indicates death
