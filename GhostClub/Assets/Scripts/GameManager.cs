@@ -11,6 +11,11 @@ public class GameManager : MonoBehaviour
     public GameObject host;
     public GameObject summon;
     public GameObject sound;
+    
+    // For displaying Button-mapping 
+    public GameObject buttonMapping;
+
+    public bool isStarted = false;
 
     private void Awake()
     {
@@ -31,6 +36,11 @@ public class GameManager : MonoBehaviour
     void Start()
     {
         SetUpCharacters();
+        
+        // Button Mapping 
+        buttonMapping = GameObject.Find("ControlMaps");
+
+        isStarted = false;
     }
 
     // Update is called once per frame
@@ -38,6 +48,9 @@ public class GameManager : MonoBehaviour
     {
         // Wiring the characters' GameObjects
         SetUpCharacters();
+        
+        // Button Mapping
+        ButtonMapping();
     }
 
     private void SetUpCharacters()
@@ -47,5 +60,31 @@ public class GameManager : MonoBehaviour
         host = GameObject.FindGameObjectWithTag("HostUnit");
         summon = GameObject.FindGameObjectWithTag("SummonUnit");
         sound = GameObject.FindGameObjectWithTag("SoundUnit");
+    }
+
+    private void ButtonMapping()
+    {
+        // At the beginning of the game, show the interface
+        if (!isStarted)
+        {
+            buttonMapping.SetActive(true);
+
+            if (Input.GetKeyDown(KeyCode.F))
+            {
+                isStarted = true;
+            }
+        }
+        // During the gameplay, hold the key to show the interface temporarily 
+        else
+        {
+            if (Input.GetKey(KeyCode.F))
+            {
+                buttonMapping.SetActive(true);
+            }
+            else
+            {
+                buttonMapping.SetActive(false);
+            }
+        }
     }
 }
