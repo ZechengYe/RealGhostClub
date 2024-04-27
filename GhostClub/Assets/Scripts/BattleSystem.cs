@@ -97,6 +97,13 @@ public class BattleSystem : MonoBehaviour
     
     private string uiMessage; 
     
+    //shaking camera 
+    // How long the object should shake for.
+    public float shakeDuration = 0f;
+    public float decreaseFactor = 1.0f;
+
+    public bool shaketrue= false;
+    
     //testing
     public TextMeshProUGUI testingPrompts;
     public bool TakeSharedPhysicalDamage(int physicalDmg)
@@ -125,7 +132,7 @@ public class BattleSystem : MonoBehaviour
     public static bool bossWeak = false;
     //maybe different music will have different boost such as double magic damage, etc
     public SpriteRenderer bossSpriteRenderer;
-
+    
     void Start()
     {
         //this function show the name of all connected controllers
@@ -391,6 +398,20 @@ public class BattleSystem : MonoBehaviour
                 UpdateUIText("You LOST!");
                 break;
         }
+        if (shaketrue)
+        {
+            if (shakeDuration > 0) {
+                vCam1.GetCinemachineComponent<CinemachineBasicMultiChannelPerlin>().m_AmplitudeGain = 2f;
+                vCam2.GetCinemachineComponent<CinemachineBasicMultiChannelPerlin>().m_AmplitudeGain = 2f;
+                shakeDuration -= Time.deltaTime * decreaseFactor;
+            } else
+            {
+                shakeDuration = 1f;
+                vCam1.GetCinemachineComponent<CinemachineBasicMultiChannelPerlin>().m_AmplitudeGain = 0f;
+                vCam2.GetCinemachineComponent<CinemachineBasicMultiChannelPerlin>().m_AmplitudeGain = 0f;
+                shaketrue = false;
+            }
+        }
 
         if (inspirationFull == true)
         {
@@ -412,6 +433,7 @@ public class BattleSystem : MonoBehaviour
 #region Character Skills
     void HostSkill_A()
     {
+        hostAttacking();
         Debug.Log("Host Damaged Boss by Skill 1");
         bool physicalIsDead = bossUnit.bossTakePhysicalDamage(hostUnit.physicalDamage);
         bool magicalIsDead = bossUnit.bossTakeMagicalDamage(hostUnit.magicalDamage);
@@ -433,6 +455,7 @@ public class BattleSystem : MonoBehaviour
     }
     void HostSkill_B()
     {
+        hostAttacking();
         Debug.Log("Host Damaged Boss by Skill 2");
         bool physicalIsDead = bossUnit.bossTakePhysicalDamage(hostUnit.physicalDamage);
         bool magicalIsDead = bossUnit.bossTakeMagicalDamage(hostUnit.magicalDamage);
@@ -756,6 +779,8 @@ public class BattleSystem : MonoBehaviour
     void BossSkill_A()
     {
         Debug.Log("Boss uses Skill 1");
+        bossAttacking();
+        //check if animation is running
         //deal both physical and magical damage for now
         bool isDead = soundUnit.TakePhysicalDamage(bossUnit.physicalDamage, this);
         bool summonisDead = summonUnit.TakeMagicalDamage(bossUnit.magicalDamage, this);
@@ -776,6 +801,8 @@ public class BattleSystem : MonoBehaviour
     void BossSkill_B()
     {
         Debug.Log("Boss uses Skill 2");
+        //check if animation is running
+        bossAttacking();
         //deal double physical damage
         bool isDead = soundUnit.TakePhysicalDamage(bossUnit.physicalDamage * 2, this);
         bool summonisDead = summonUnit.TakeMagicalDamage(bossUnit.magicalDamage, this);
@@ -796,6 +823,8 @@ public class BattleSystem : MonoBehaviour
     void BossSkill_C()
     {
         Debug.Log("Boss uses Skill 3");
+        //check if animation is running
+        bossAttacking();
         //deal double physical damage
         bool isDead = soundUnit.TakePhysicalDamage(bossUnit.physicalDamage, this);
         bool summonisDead = summonUnit.TakeMagicalDamage(bossUnit.magicalDamage *2, this);
@@ -995,6 +1024,23 @@ public class BattleSystem : MonoBehaviour
             Debug.LogError("Boss SpriteRenderer not found.");
         }
     }
+
+   void bossAttacking()
+   {
+           bossUnit.GetComponent<Animator>().Play("Boss_Attack");
+           shakeCamera();
+   }
+
+   void hostAttacking()
+   {
+       hostUnit.GetComponent<Animator>().Play("Host_Attack");
+       shakeCamera();
+   }
+
+   void shakeCamera()
+   {
+       shaketrue = true; 
+   }
 
     void updateBossHealth()
     {
