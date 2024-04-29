@@ -2,6 +2,8 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.InputSystem;
+using UnityEngine.UIElements;
 
 public class GameManager : MonoBehaviour
 {
@@ -39,6 +41,7 @@ public class GameManager : MonoBehaviour
         
         // Button Mapping 
         buttonMapping = GameObject.Find("ControlMaps");
+        //displayTutorial = GameObject.Find("DisplayTutorial").gameObject.GetComponent<Image>();
 
         isStarted = false;
     }
@@ -69,7 +72,8 @@ public class GameManager : MonoBehaviour
         {
             buttonMapping.SetActive(true);
 
-            if (Input.GetKeyDown(KeyCode.F))
+            if (Input.GetKeyDown(KeyCode.F) || 
+                Gamepad.all[0].startButton.isPressed)
             {
                 isStarted = true;
             }
@@ -77,7 +81,8 @@ public class GameManager : MonoBehaviour
         // During the gameplay, hold the key to show the interface temporarily 
         else
         {
-            if (Input.GetKey(KeyCode.F))
+            if (Input.GetKey(KeyCode.F) || 
+                Gamepad.all[0].startButton.isPressed)
             {
                 buttonMapping.SetActive(true);
             }
