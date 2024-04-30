@@ -53,6 +53,11 @@ PrefabInstance:
       propertyPath: m_TagString
       value: SummonUnit
       objectReference: {fileID: 0}
+    - target: {fileID: 3253099474880766246, guid: 83548f0b10855cf4c83cec8d3e09ca61,
+        type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 8513901204820888837, guid: 83548f0b10855cf4c83cec8d3e09ca61,
         type: 3}
       propertyPath: m_Sprite
@@ -73,6 +78,16 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Color.r
       value: 0.75
+      objectReference: {fileID: 0}
+    - target: {fileID: 8814454597551379879, guid: 83548f0b10855cf4c83cec8d3e09ca61,
+        type: 3}
+      propertyPath: m_LocalScale.x
+      value: 1.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 8814454597551379879, guid: 83548f0b10855cf4c83cec8d3e09ca61,
+        type: 3}
+      propertyPath: m_LocalScale.y
+      value: 1.5
       objectReference: {fileID: 0}
     - target: {fileID: 8814454597551379879, guid: 83548f0b10855cf4c83cec8d3e09ca61,
         type: 3}
