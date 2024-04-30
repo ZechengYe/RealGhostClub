@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.Serialization;
 using UnityEngine.UIElements;
 using Image = UnityEngine.UI.Image;
 
@@ -46,6 +47,9 @@ public class GameManager : MonoBehaviour
     public GameObject UISkillA; // Skill A of the branch
     public GameObject UISkillB; // Skill B of the branch
 
+    public GameObject UIButtonLeft;
+    public GameObject UIButtonRight;
+
     public GameObject UIButtonMain; // Triangle, Circle, X, Square
     
     // Loading UI sprites from resource folder
@@ -72,8 +76,11 @@ public class GameManager : MonoBehaviour
     public Sprite questionMark;
     
     // Buttons for UI
-    public Sprite buttonL2;
-    public Sprite buttonR2;
+    [FormerlySerializedAs("buttonL2")] public Sprite buttonL1;
+    [FormerlySerializedAs("buttonR2")] public Sprite buttonR1;
+
+    public Sprite buttonLeft;
+    public Sprite buttonRight;
     
     public Sprite buttonTriangle;
     public Sprite buttonCircle;
@@ -118,6 +125,9 @@ public class GameManager : MonoBehaviour
         UIMain = GameObject.Find("UIMain");
         UISkillA = GameObject.Find("SkillA");
         UISkillB = GameObject.Find("SkillB");
+
+        UIButtonLeft = GameObject.Find("ButtonL");
+        UIButtonRight = GameObject.Find("ButtonR");
     }
 
     // Update is called once per frame
@@ -188,6 +198,9 @@ public class GameManager : MonoBehaviour
                 UIMain.SetActive(true);
                 UISkillA.SetActive(false);
                 UISkillB.SetActive(false);
+
+                UIButtonLeft.GetComponent<Image>().sprite = buttonL1;
+                UIButtonRight.GetComponent<Image>().sprite = buttonR1;
                 
                 break;
             case TurnStatus.HostBranch or 
@@ -200,6 +213,9 @@ public class GameManager : MonoBehaviour
                 UIMain.SetActive(false);
                 UISkillA.SetActive(true);
                 UISkillB.SetActive(true);
+                
+                UIButtonLeft.GetComponent<Image>().sprite = buttonLeft;
+                UIButtonRight.GetComponent<Image>().sprite = buttonRight;
                 
                 break;
             
@@ -218,7 +234,7 @@ public class GameManager : MonoBehaviour
                 UIRoot.GetComponent<RectTransform>().anchoredPosition = new Vector2(250, 310);
                 
                 // Sprites
-                UIButtonMain.GetComponent<Image>().sprite = buttonL2;
+                UIButtonMain.GetComponent<Image>().sprite = buttonL1;
                 
                 UIMain.GetComponent<Image>().sprite = hostMain;
                 UISkillA.GetComponent<Image>().sprite = hostSkillA;
@@ -230,7 +246,7 @@ public class GameManager : MonoBehaviour
                 UIRoot.GetComponent<RectTransform>().anchoredPosition = new Vector2(110, 250);
                 
                 // Sprites
-                UIButtonMain.GetComponent<Image>().sprite = buttonR2;
+                UIButtonMain.GetComponent<Image>().sprite = buttonR1;
                 
                 UIMain.GetComponent<Image>().sprite = summonMain;
                 UISkillA.GetComponent<Image>().sprite = summonSkillA;

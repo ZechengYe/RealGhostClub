@@ -9930,6 +9930,42 @@ PrefabInstance:
       propertyPath: m_Name
       value: GameManagerHolder
       objectReference: {fileID: 0}
+    - target: {fileID: 7607098085733711998, guid: 9177e3f0474c2be4e970d7c4824888ef,
+        type: 3}
+      propertyPath: buttonL1
+      value: 
+      objectReference: {fileID: 21300000, guid: 6d4dfcdfa7cfe7640b69eb16de69ef5c,
+        type: 3}
+    - target: {fileID: 7607098085733711998, guid: 9177e3f0474c2be4e970d7c4824888ef,
+        type: 3}
+      propertyPath: buttonL2
+      value: 
+      objectReference: {fileID: 21300000, guid: 6d4dfcdfa7cfe7640b69eb16de69ef5c,
+        type: 3}
+    - target: {fileID: 7607098085733711998, guid: 9177e3f0474c2be4e970d7c4824888ef,
+        type: 3}
+      propertyPath: buttonR1
+      value: 
+      objectReference: {fileID: 21300000, guid: a2276436889b0f349bb6e21be5f94436,
+        type: 3}
+    - target: {fileID: 7607098085733711998, guid: 9177e3f0474c2be4e970d7c4824888ef,
+        type: 3}
+      propertyPath: buttonR2
+      value: 
+      objectReference: {fileID: 21300000, guid: a2276436889b0f349bb6e21be5f94436,
+        type: 3}
+    - target: {fileID: 7607098085733711998, guid: 9177e3f0474c2be4e970d7c4824888ef,
+        type: 3}
+      propertyPath: buttonLeft
+      value: 
+      objectReference: {fileID: 21300000, guid: e9f36061f3899c947b9c902402e15ef9,
+        type: 3}
+    - target: {fileID: 7607098085733711998, guid: 9177e3f0474c2be4e970d7c4824888ef,
+        type: 3}
+      propertyPath: buttonRight
+      value: 
+      objectReference: {fileID: 21300000, guid: b8b6e3b8a12da1a4da8e48eb873f6015,
+        type: 3}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
