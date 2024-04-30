@@ -47,3 +47,33 @@ MonoBehaviour:
   boss: {fileID: 0}
   host: {fileID: 0}
   summon: {fileID: 0}
+  sound: {fileID: 0}
+  buttonMapping: {fileID: 0}
+  turnStatus: 0
+  isStarted: 0
+  turnDisplay: {fileID: 0}
+  UIRoot: {fileID: 0}
+  UIMain: {fileID: 0}
+  UISkillA: {fileID: 0}
+  UISkillB: {fileID: 0}
+  hostMain: {fileID: 21300000, guid: 728304c154b0d354cb06afb4eaec1f35, type: 3}
+  hostSkillA: {fileID: 21300000, guid: 41416e3f04b2f5342a5a40768119e850, type: 3}
+  hostSkillB: {fileID: 21300000, guid: ddfd638da457ec04180f657683a7362b, type: 3}
+  summonMain: {fileID: 21300000, guid: 88fb89d52c948a14e822eb46b30a1cc3, type: 3}
+  summonSkillA: {fileID: 21300000, guid: 88fb89d52c948a14e822eb46b30a1cc3, type: 3}
+  summonSkillB: {fileID: 21300000, guid: 88fb89d52c948a14e822eb46b30a1cc3, type: 3}
+  directorMain: {fileID: 21300000, guid: 56422c2182a49374e879f37fc44d6040, type: 3}
+  directorSkillA: {fileID: 21300000, guid: 93f295a1729b9164fb81b50ef5b02630, type: 3}
+  soundMain: {fileID: 21300000, guid: e79233ecd7a20a94d8fd403df315cada, type: 3}
+  soundSkillA: {fileID: 21300000, guid: f837f393536991143a60e256a03cbd45, type: 3}
+  internMain: {fileID: 21300000, guid: 66c749d200219e249aa6f8bb296049b1, type: 3}
+  interSkillA: {fileID: 21300000, guid: 1c0d3e23174e7c7418d5978c0cc45fcd, type: 3}
+  cameraMain: {fileID: 21300000, guid: ce23c000d6134f44796fa2b62f5c040c, type: 3}
+  cameraSkillA: {fileID: 21300000, guid: b0a6ac83d4693bf4abbafdc1f37b8294, type: 3}
+  questionMark: {fileID: 21300000, guid: 085c1686fc0680f42bc28a63e3309c18, type: 3}
+  buttonL2: {fileID: 21300000, guid: 7e0562cd44bee8f41a821dfe3c2679fc, type: 3}
+  buttonR2: {fileID: 21300000, guid: 45299255e4ef36e4a88004652eac1a46, type: 3}
+  buttonTriangle: {fileID: 21300000, guid: f22c2d296dd223e4d99fc32da8a61be4, type: 3}
+  buttonCircle: {fileID: 21300000, guid: d06771e75d1a4324793dc0498b1ee36a, type: 3}
+  buttonX: {fileID: 21300000, guid: 79279fa4b8fa2d24b805b19db478e88b, type: 3}
+  buttonSquare: {fileID: 21300000, guid: 69014da8c02f1254f980285731950814, type: 3}
