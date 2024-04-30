@@ -8686,6 +8686,18 @@ PrefabInstance:
         type: 3}
     - target: {fileID: 7607098085733711998, guid: 9177e3f0474c2be4e970d7c4824888ef,
         type: 3}
+      propertyPath: summonSkillA
+      value: 
+      objectReference: {fileID: 21300000, guid: 88fb89d52c948a14e822eb46b30a1cc3,
+        type: 3}
+    - target: {fileID: 7607098085733711998, guid: 9177e3f0474c2be4e970d7c4824888ef,
+        type: 3}
+      propertyPath: summonSkillB
+      value: 
+      objectReference: {fileID: 21300000, guid: 88fb89d52c948a14e822eb46b30a1cc3,
+        type: 3}
+    - target: {fileID: 7607098085733711998, guid: 9177e3f0474c2be4e970d7c4824888ef,
+        type: 3}
       propertyPath: directorSkillA
       value: 
       objectReference: {fileID: 21300000, guid: 93f295a1729b9164fb81b50ef5b02630,

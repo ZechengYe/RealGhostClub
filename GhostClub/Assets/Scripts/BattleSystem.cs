@@ -164,9 +164,6 @@ public class BattleSystem : MonoBehaviour
                 {
                     UpdateUIText("It's Host's turn, Press Q/leftShoulder to open skill tree");
                     GameManager.instance.turnStatus = TurnStatus.HostTurn;
-                    
-                    
-                    
                     isTurnStart = false;
                 }
 
@@ -204,6 +201,7 @@ public class BattleSystem : MonoBehaviour
                 if (isTurnStart)
                 {
                     UpdateUIText("It's Summon's turn, Press E/rightshoulder to open skill tree");
+                    GameManager.instance.turnStatus = TurnStatus.SummonTurn;
                     isTurnStart = false;
                 }
                 //just for now...to check if things work
@@ -217,6 +215,7 @@ public class BattleSystem : MonoBehaviour
                 if (isTurnStart)
                 {
                     UpdateUIText("Summon Press 1/left to use skill 1, Press 2/right to use skill2");
+                    GameManager.instance.turnStatus = TurnStatus.SummonBranch;
                     isTurnStart = false;
                 }
 
@@ -248,6 +247,7 @@ public class BattleSystem : MonoBehaviour
                 if (isTurnStart)
                 {
                     UpdateUIText("Director Press 1/left or 2/right to attack");
+                    GameManager.instance.turnStatus = TurnStatus.DirectorBranch;
                     isTurnStart = false;
                     canUseAlpha1 = true;
                 }
@@ -283,6 +283,7 @@ public class BattleSystem : MonoBehaviour
                 if (isTurnStart)
                 {
                     UpdateUIText("It's Sound's turn, Press S/circle to open skill tree");
+                    GameManager.instance.turnStatus = TurnStatus.SoundTurn;
                     isTurnStart = false;
                 }
                 if(Input.GetKeyDown(KeyCode.S) || Gamepad.all[0].buttonEast.isPressed)
@@ -295,6 +296,8 @@ public class BattleSystem : MonoBehaviour
                 if (isTurnStart)
                 {
                     UpdateUIText("Sound, Press 1/left & 2/right to attack");
+                    GameManager.instance.turnStatus = TurnStatus.SoundBranch;
+                    
                     if (inspirationFull)
                     {
                         UpdateUIText("Inspiration Full, press 2/right to use unique skill");
@@ -316,6 +319,7 @@ public class BattleSystem : MonoBehaviour
                 if (isTurnStart)
                 {
                     UpdateUIText("It's Camera's turn, Press C/square to open skill tree");
+                    GameManager.instance.turnStatus = TurnStatus.CameraTurn;
                     isTurnStart = false;
                 }
                 if(Input.GetKeyDown(KeyCode.C) || Gamepad.all[0].buttonWest.isPressed)
@@ -328,6 +332,7 @@ public class BattleSystem : MonoBehaviour
                 if (isTurnStart)
                 {
                     UpdateUIText("It's Camera's turn, Press 1/left & 2/right to use skills");
+                    GameManager.instance.turnStatus = TurnStatus.CameraBranch;
                     isTurnStart = false;
                 }
                 if (Input.GetKeyDown(KeyCode.Alpha1) || Gamepad.all[0].dpad.left.isPressed)
@@ -344,6 +349,7 @@ public class BattleSystem : MonoBehaviour
                 if (isTurnStart)
                 {
                     UpdateUIText("It's Intern's turn, Press I/ X Button to open skill tree");
+                    GameManager.instance.turnStatus = TurnStatus.InternTurn;
                     isTurnStart = false;
                 }
                 if(Input.GetKeyDown(KeyCode.I) || Gamepad.all[0].buttonSouth.isPressed)
@@ -356,6 +362,7 @@ public class BattleSystem : MonoBehaviour
                 if (isTurnStart)
                 {
                     UpdateUIText("It's Intern's turn, Press 1/left & 2/right to use skills");
+                    GameManager.instance.turnStatus = TurnStatus.InternBranch;
                     isTurnStart = false;
                 }
 
@@ -459,7 +466,7 @@ public class BattleSystem : MonoBehaviour
         {
             TransitionToNextTurn();
         }
-            DamageMonitor();
+        DamageMonitor();
     }
     void HostSkill_B()
     {

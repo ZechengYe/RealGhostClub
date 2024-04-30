@@ -118,8 +118,6 @@ public class GameManager : MonoBehaviour
 
         // Switching UI display
         TurnUIDisplay();
-        
-        //UIMain.GetComponent<Image>().sprite = soundMain;
     }
 
     private void SetUpCharacters()
@@ -164,6 +162,7 @@ public class GameManager : MonoBehaviour
 
     public void TurnUIDisplay()
     {
+        // Controlling ON/OFF of UI slots 
         switch (turnStatus)
         { 
             case TurnStatus.HostTurn or 
@@ -174,8 +173,8 @@ public class GameManager : MonoBehaviour
                  TurnStatus.CameraTurn:
                 
                 UIMain.SetActive(true);
-                instance.UISkillA.SetActive(false);
-                instance.UISkillB.SetActive(false);
+                UISkillA.SetActive(false);
+                UISkillB.SetActive(false);
                 
                 break;
             case TurnStatus.HostBranch or 
@@ -186,15 +185,87 @@ public class GameManager : MonoBehaviour
                  TurnStatus.CameraBranch:
                 
                 UIMain.SetActive(false);
-                instance.UISkillA.SetActive(true);
-                instance.UISkillB.SetActive(true);
+                UISkillA.SetActive(true);
+                UISkillB.SetActive(true);
                 
                 break;
             
             default:
                 UIMain.SetActive(false);
-                instance.UISkillA.SetActive(false);
-                instance.UISkillB.SetActive(false);
+                UISkillA.SetActive(false);
+                UISkillB.SetActive(false);
+                break;
+        }
+        
+        // Changing sprites for UI slots
+        switch (turnStatus)
+        {
+            case TurnStatus.HostTurn or TurnStatus.HostBranch:
+                // Position
+                UIRoot.GetComponent<RectTransform>().anchoredPosition = new Vector2(250, 310);
+                
+                // Sprites
+                UIMain.GetComponent<Image>().sprite = hostMain;
+                UISkillA.GetComponent<Image>().sprite = hostSkillA;
+                UISkillB.GetComponent<Image>().sprite = hostSkillB;
+                break;
+            
+            case TurnStatus.SummonTurn or TurnStatus.SummonBranch:
+                // Position
+                UIRoot.GetComponent<RectTransform>().anchoredPosition = new Vector2(110, 250);
+                
+                // Sprites
+                UIMain.GetComponent<Image>().sprite = summonMain;
+                UISkillA.GetComponent<Image>().sprite = summonSkillA;
+                UISkillB.GetComponent<Image>().sprite = summonSkillB;
+                break;
+            
+            case TurnStatus.DirectorTurn or TurnStatus.DirectorBranch:
+                // Position
+                UIRoot.GetComponent<RectTransform>().anchoredPosition = new Vector2(-580, 340);
+                
+                // Sprites
+                UIMain.GetComponent<Image>().sprite = directorMain;
+                UISkillB.GetComponent<Image>().sprite = directorSkillA;
+                UISkillA.GetComponent<Image>().sprite = questionMark;
+                break;
+            
+            case TurnStatus.SoundTurn or TurnStatus.SoundBranch:
+                // Position
+                UIRoot.GetComponent<RectTransform>().anchoredPosition = new Vector2(-210, 330);
+                
+                // Sprites
+                UIMain.GetComponent<Image>().sprite = soundMain;
+                UISkillB.GetComponent<Image>().sprite = soundSkillA;
+                UISkillA.GetComponent<Image>().sprite = questionMark;
+                break;
+            
+            case TurnStatus.InternTurn or TurnStatus.InternBranch:
+                // Position
+                UIRoot.GetComponent<RectTransform>().anchoredPosition = new Vector2(-785, 280);
+                
+                // Sprites
+                UIMain.GetComponent<Image>().sprite = internMain;
+                UISkillB.GetComponent<Image>().sprite = interSkillA;
+                UISkillA.GetComponent<Image>().sprite = questionMark;
+                break;
+            
+            // NOTE: ICONS FOR CAMERA GUY MIGHT NEED TO BE MODIFIED BASED ON THE POS OF INSPIRATION BAR
+            case TurnStatus.CameraTurn or TurnStatus.CameraBranch:
+                // Position
+                UIRoot.GetComponent<RectTransform>().anchoredPosition = new Vector2(-380, 310);
+                
+                // Sprites
+                UIMain.GetComponent<Image>().sprite = cameraMain;
+                UISkillB.GetComponent<Image>().sprite = cameraSkillA;
+                UISkillA.GetComponent<Image>().sprite = questionMark;
+                break;
+            
+            default:
+                // Sprites
+                UIMain.GetComponent<Image>().sprite = null;
+                UISkillA.GetComponent<Image>().sprite = null;
+                UISkillB.GetComponent<Image>().sprite = null;
                 break;
         }
     }
