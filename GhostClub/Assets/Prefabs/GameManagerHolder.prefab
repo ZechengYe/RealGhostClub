@@ -56,12 +56,13 @@ MonoBehaviour:
   UIMain: {fileID: 0}
   UISkillA: {fileID: 0}
   UISkillB: {fileID: 0}
+  UIButtonMain: {fileID: 0}
   hostMain: {fileID: 21300000, guid: 728304c154b0d354cb06afb4eaec1f35, type: 3}
   hostSkillA: {fileID: 21300000, guid: 41416e3f04b2f5342a5a40768119e850, type: 3}
   hostSkillB: {fileID: 21300000, guid: ddfd638da457ec04180f657683a7362b, type: 3}
   summonMain: {fileID: 21300000, guid: 88fb89d52c948a14e822eb46b30a1cc3, type: 3}
-  summonSkillA: {fileID: 21300000, guid: 88fb89d52c948a14e822eb46b30a1cc3, type: 3}
-  summonSkillB: {fileID: 21300000, guid: 88fb89d52c948a14e822eb46b30a1cc3, type: 3}
+  summonSkillA: {fileID: 21300000, guid: dee01bf7126e15946b5c648bca34d6ff, type: 3}
+  summonSkillB: {fileID: 21300000, guid: 1aae90f6534285c498f4afa872d193c7, type: 3}
   directorMain: {fileID: 21300000, guid: 56422c2182a49374e879f37fc44d6040, type: 3}
   directorSkillA: {fileID: 21300000, guid: 93f295a1729b9164fb81b50ef5b02630, type: 3}
   soundMain: {fileID: 21300000, guid: e79233ecd7a20a94d8fd403df315cada, type: 3}
