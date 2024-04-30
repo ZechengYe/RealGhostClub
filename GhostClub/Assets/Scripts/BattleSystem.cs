@@ -7,7 +7,8 @@ using Slider = UnityEngine.UI.Slider;
 using Cinemachine;
 using TMPro;
 using Unity.VisualScripting;
-using UnityEngine.InputSystem; 
+using UnityEngine.InputSystem;
+using UnityEngine.SceneManagement;
 
 public enum BattleState 
 {
@@ -53,6 +54,8 @@ public class BattleSystem : MonoBehaviour
 
     public Slider TeamHealth;
     public Slider SummonHealth;
+
+    private IEnumerator interncoroutine;
 
     public Transform hostBattleStation;
     public Transform summonBattleStation;
@@ -128,6 +131,8 @@ public class BattleSystem : MonoBehaviour
     public AudioClip BossHit02;
 
     public GameObject DirectorBoard;
+    public GameObject winUI;
+    public GameObject loseUI;
 
     //testing
     public TextMeshProUGUI testingPrompts;
@@ -570,8 +575,8 @@ public class BattleSystem : MonoBehaviour
     void SummonSkill_A()
     {   
         Debug.Log("Summon Damaged Boss by Skill 1");
-        vfxAnimations.GetComponent<Animator>().Play("SummonAttack02");
-        sfxAudioSource.clip = summon01;
+        vfxAnimations.GetComponent<Animator>().Play("SummonAttack01");
+        sfxAudioSource.clip = summon02;
         sfxAudioSource.Play();
 
         bool physicalIsDead = bossUnit.bossTakePhysicalDamage(summonUnit.physicalDamage);
@@ -594,8 +599,8 @@ public class BattleSystem : MonoBehaviour
     void SummonSkill_B()
     {
         Debug.Log("Summon Damaged Boss by Skill 2");
-        vfxAnimations.GetComponent<Animator>().Play("SummonAttack01");
-        sfxAudioSource.clip = summon02;
+        vfxAnimations.GetComponent<Animator>().Play("SummonAttack02");
+        sfxAudioSource.clip = summon01;
         sfxAudioSource.Play();
 
         bool physicalIsDead = bossUnit.bossTakePhysicalDamage(summonUnit.physicalDamage);
@@ -805,10 +810,12 @@ public class BattleSystem : MonoBehaviour
         else if (physicalIsDead || magicalIsDead)
         {
             TransitionToNextTurn();
+
         }
         else
         {
             TransitionToNextTurn();
+
         }
         DamageMonitor();
     }
@@ -853,13 +860,16 @@ public class BattleSystem : MonoBehaviour
         else if (physicalIsDead || magicalIsDead)
         {
             TransitionToNextTurn();
+
         }
         else
         {
             TransitionToNextTurn();
+
         }
         DamageMonitor();
     }
+
 #endregion
  
 #region Boss Behavior & Skills
@@ -994,11 +1004,15 @@ public class BattleSystem : MonoBehaviour
         if (state == BattleState.WON)
         {
             Debug.Log("You Win The JRPG Battle!");
+            winUI.SetActive(true);
+         
         }
         else if (state == BattleState.LOST)
         {
             Debug.Log("You Are So WEAK! You Lost!");
+            loseUI.SetActive(true);
         }
+
     }
 
     void TransitionToNextTurn() //this function now is a state machine switch
@@ -1048,6 +1062,7 @@ public class BattleSystem : MonoBehaviour
         }
 
         isTurnStart = true;
+  
         //Debug.Log($"Transitioning to: {state}");
     }
    
@@ -1146,7 +1161,7 @@ public class BattleSystem : MonoBehaviour
         if (bossUnit.currentPhysicalHP >= 300 & bossUnit.currentPhysicalHP <= 400)
         {
             bossHealth04.value = bossUnit.currentPhysicalHP;
-            if(bossUnit.currentPhysicalHP <320 & hostUnit.physicalDamage >= 20)
+            if(bossUnit.currentPhysicalHP <322 & hostUnit.physicalDamage >= 20)
             {
                 bossHealth04.value = 300;
             }
@@ -1154,7 +1169,7 @@ public class BattleSystem : MonoBehaviour
         if (bossUnit.currentPhysicalHP >= 200 & bossUnit.currentPhysicalHP <= 300)
         {
             bossHealth03.value = bossUnit.currentPhysicalHP;
-            if (bossUnit.currentPhysicalHP < 220 & hostUnit.physicalDamage >= 20)
+            if (bossUnit.currentPhysicalHP < 232 & hostUnit.physicalDamage >= 20)
             {
                 bossHealth03.value = 200;
             }
@@ -1162,7 +1177,7 @@ public class BattleSystem : MonoBehaviour
         if (bossUnit.currentPhysicalHP >= 100 & bossUnit.currentPhysicalHP <= 200)
         {
             bossHealth02.value = bossUnit.currentPhysicalHP;
-            if (bossUnit.currentPhysicalHP < 120 & hostUnit.physicalDamage >= 20)
+            if (bossUnit.currentPhysicalHP < 122 & hostUnit.physicalDamage >= 20)
             {
                 bossHealth02.value = 100;
             }
@@ -1170,7 +1185,7 @@ public class BattleSystem : MonoBehaviour
          if (bossUnit.currentPhysicalHP >= 0 && bossUnit.currentPhysicalHP <= 100)
         {
             bossHealth01.value = bossUnit.currentPhysicalHP;
-            if (bossUnit.currentPhysicalHP <20 & hostUnit.physicalDamage >= 20)
+            if (bossUnit.currentPhysicalHP <22 & hostUnit.physicalDamage >= 20)
             {
                 bossHealth01.value = 0;
             }
@@ -1179,7 +1194,7 @@ public class BattleSystem : MonoBehaviour
         if (bossUnit.currentMagicalHP >= 300 & bossUnit.currentMagicalHP <= 400)
         {
             bossSpirit04.value = bossUnit.currentMagicalHP;
-            if (bossUnit.currentMagicalHP < 320 & summonUnit.magicalDamage >= 20)
+            if (bossUnit.currentMagicalHP < 322 & summonUnit.magicalDamage >= 20)
             {
                 bossSpirit04.value = 300;
             }
@@ -1187,7 +1202,7 @@ public class BattleSystem : MonoBehaviour
         if (bossUnit.currentMagicalHP >= 200 & bossUnit.currentMagicalHP <= 300)
         {
             bossSpirit03.value = bossUnit.currentMagicalHP;
-            if (bossUnit.currentMagicalHP < 220 & summonUnit.magicalDamage >= 20)
+            if (bossUnit.currentMagicalHP < 232 & summonUnit.magicalDamage >= 20)
             {
                 bossSpirit03.value = 200;
             }
@@ -1195,7 +1210,7 @@ public class BattleSystem : MonoBehaviour
         if (bossUnit.currentMagicalHP >= 100 & bossUnit.currentMagicalHP <= 200)
         {
             bossSpirit02.value = bossUnit.currentMagicalHP;
-            if (bossUnit.currentMagicalHP < 120 & summonUnit.magicalDamage >= 20)
+            if (bossUnit.currentMagicalHP < 122 & summonUnit.magicalDamage >= 20)
             {
                 bossSpirit02.value = 100;
             }
@@ -1203,7 +1218,7 @@ public class BattleSystem : MonoBehaviour
         if (bossUnit.currentMagicalHP >= 0 && bossUnit.currentMagicalHP <= 100)
         {
             bossSpirit02.value = bossUnit.currentMagicalHP;
-            if (bossUnit.currentMagicalHP < 20 & summonUnit.magicalDamage >= 20)
+            if (bossUnit.currentMagicalHP < 22 & summonUnit.magicalDamage >= 20)
             {
                 bossSpirit01.value = 0;
             }
