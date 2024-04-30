@@ -52,7 +52,8 @@ public class BattleSystem : MonoBehaviour
     public Slider bossSpirit04;
 
     public Slider TeamHealth;
-    
+    public Slider SummonHealth;
+
     public Transform hostBattleStation;
     public Transform summonBattleStation;
     public Transform directorBattleStation;
@@ -103,7 +104,31 @@ public class BattleSystem : MonoBehaviour
     public float decreaseFactor = 1.0f;
 
     public bool shaketrue= false;
-    
+
+    //vfx sfx animations
+    public GameObject vfxAnimations;
+    public AudioSource sfxAudioSource;
+    public AudioClip hostClip01;
+    public AudioClip hostClip02;
+    public AudioClip hostComboClip;
+    public AudioClip summon01;
+    public AudioClip summon02;
+    public AudioClip director01;
+    public AudioClip Camera;
+    public AudioClip Sound;
+    public AudioClip Intern01;
+    public AudioClip Intern02;
+    public AudioClip singlehit;
+
+
+    public AudioClip Boss01;
+    public AudioClip Boss02;
+
+    public AudioClip BossHit01;
+    public AudioClip BossHit02;
+
+    public GameObject DirectorBoard;
+
     //testing
     public TextMeshProUGUI testingPrompts;
     public bool TakeSharedPhysicalDamage(int physicalDmg)
@@ -262,6 +287,9 @@ public class BattleSystem : MonoBehaviour
                         Time.timeScale = 0f;
                         isGamePaused = true;
                         canUseAlpha1 = false;
+                        DirectorBoard.SetActive(true);
+                        sfxAudioSource.clip = director01;
+                        sfxAudioSource.Play();
                         UpdateUIText("Paused, Press 3/triangle again to proceed");
                         //you can put the pause UI here
                     }
@@ -272,6 +300,9 @@ public class BattleSystem : MonoBehaviour
                     //resume the game & does something such as stop boss behavior 
                     Time.timeScale = 1.0f;
                     isGamePaused = false;
+                    DirectorBoard.SetActive(false);
+                    sfxAudioSource.clip = director01;
+                    sfxAudioSource.Play();
                     UpdateUIText("Game Resumed");
                     
                     //we only need transition function here, but I also want it to do some damage check or functions, transition included in this function
@@ -449,9 +480,15 @@ public class BattleSystem : MonoBehaviour
     void HostSkill_A()
     {
         hostAttacking();
+        vfxAnimations.GetComponent<Animator>().Play("HostAttack01");
+        sfxAudioSource.clip = hostClip01;
+        sfxAudioSource.Play();
+
         Debug.Log("Host Damaged Boss by Skill 1");
         bool physicalIsDead = bossUnit.bossTakePhysicalDamage(hostUnit.physicalDamage);
         bool magicalIsDead = bossUnit.bossTakeMagicalDamage(hostUnit.magicalDamage);
+
+       
 
         if (physicalIsDead && magicalIsDead)
         {
@@ -471,6 +508,12 @@ public class BattleSystem : MonoBehaviour
     void HostSkill_B()
     {
         hostAttacking();
+        vfxAnimations.GetComponent<Animator>().Play("HostAttack02");
+        sfxAudioSource.clip = hostClip02;
+        sfxAudioSource.Play();
+
+
+
         Debug.Log("Host Damaged Boss by Skill 2");
         bool physicalIsDead = bossUnit.bossTakePhysicalDamage(hostUnit.physicalDamage);
         bool magicalIsDead = bossUnit.bossTakeMagicalDamage(hostUnit.magicalDamage);
@@ -497,6 +540,9 @@ public class BattleSystem : MonoBehaviour
         {   
             soundUnit.inspirationBar = 0;
             inspirationFull = false;
+            vfxAnimations.GetComponent<Animator>().Play("HostCombo");
+            sfxAudioSource.clip = hostComboClip;
+            sfxAudioSource.Play();
 
             //take summon & host attack
             bool physicalIsDead = bossUnit.TakePhysicalDamage(hostUnit.physicalDamage, this);
@@ -524,6 +570,9 @@ public class BattleSystem : MonoBehaviour
     void SummonSkill_A()
     {   
         Debug.Log("Summon Damaged Boss by Skill 1");
+        vfxAnimations.GetComponent<Animator>().Play("SummonAttack02");
+        sfxAudioSource.clip = summon01;
+        sfxAudioSource.Play();
 
         bool physicalIsDead = bossUnit.bossTakePhysicalDamage(summonUnit.physicalDamage);
         bool magicalIsDead = bossUnit.bossTakeMagicalDamage(summonUnit.magicalDamage);
@@ -545,6 +594,9 @@ public class BattleSystem : MonoBehaviour
     void SummonSkill_B()
     {
         Debug.Log("Summon Damaged Boss by Skill 2");
+        vfxAnimations.GetComponent<Animator>().Play("SummonAttack01");
+        sfxAudioSource.clip = summon02;
+        sfxAudioSource.Play();
 
         bool physicalIsDead = bossUnit.bossTakePhysicalDamage(summonUnit.physicalDamage);
         bool magicalIsDead = bossUnit.bossTakeMagicalDamage(summonUnit.magicalDamage);
@@ -569,7 +621,11 @@ public class BattleSystem : MonoBehaviour
         Debug.Log("Director Damaged Boss Skill 1");
         bool physicalIsDead = bossUnit.bossTakePhysicalDamage(directorUnit.physicalDamage);
         bool magicalIsDead = bossUnit.bossTakeMagicalDamage(directorUnit.magicalDamage);
-            //check if boss is dead or if the current bar reaches 0
+        vfxAnimations.GetComponent<Animator>().Play("SingleHit");
+        sfxAudioSource.clip = singlehit;
+        sfxAudioSource.Play();
+
+        //check if boss is dead or if the current bar reaches 0
 
         if (physicalIsDead && magicalIsDead)
         {
@@ -614,7 +670,10 @@ public class BattleSystem : MonoBehaviour
 
         bool physicalIsDead = bossUnit.bossTakePhysicalDamage(soundUnit.physicalDamage);
         bool magicalIsDead = bossUnit.bossTakeMagicalDamage(soundUnit.magicalDamage);
-            
+        vfxAnimations.GetComponent<Animator>().Play("SingleHit");
+        sfxAudioSource.clip = singlehit;
+        sfxAudioSource.Play();
+
         if (physicalIsDead && magicalIsDead)
         {
             EndBattle(); // Game over
@@ -678,6 +737,9 @@ public class BattleSystem : MonoBehaviour
         Debug.Log("Camera Uses Skill 1");
         bool physicalIsDead = bossUnit.bossTakePhysicalDamage(cameraUnit.physicalDamage);
         bool magicalIsDead = bossUnit.bossTakeMagicalDamage(cameraUnit.magicalDamage);
+        vfxAnimations.GetComponent<Animator>().Play("SingleHit");
+        sfxAudioSource.clip = singlehit;
+        sfxAudioSource.Play();
 
         if (physicalIsDead && magicalIsDead)
         {
@@ -732,6 +794,9 @@ public class BattleSystem : MonoBehaviour
         Debug.Log("Intern Uses Skill 1");
         bool physicalIsDead = bossUnit.bossTakePhysicalDamage(internUnit.physicalDamage);
         bool magicalIsDead = bossUnit.bossTakeMagicalDamage(internUnit.magicalDamage);
+        vfxAnimations.GetComponent<Animator>().Play("SingleHit");
+        sfxAudioSource.clip = singlehit;
+        sfxAudioSource.Play();
 
         if (physicalIsDead && magicalIsDead)
         {
@@ -750,6 +815,7 @@ public class BattleSystem : MonoBehaviour
     void InternSkill_B()
     {
         Debug.Log("Intern Lucky Time Skill 2");
+        
         //basically have a 50% chance to either increase or decrease health
         //I didn't include magical health because it doesn't make sense for an intern to be able to influence our majesty (summon);
         int chance = Random.Range(0, 2);
@@ -757,6 +823,9 @@ public class BattleSystem : MonoBehaviour
         {
             teamphysicalHP -= 100;
             Debug.Log("A o! Damn!");
+            vfxAnimations.GetComponent<Animator>().Play("InternBad");
+            sfxAudioSource.clip = Intern02;
+            sfxAudioSource.Play();
         }
         
         else if (teamphysicalHP + 50 > maxTeamPhysicalHP )
@@ -769,6 +838,9 @@ public class BattleSystem : MonoBehaviour
         {
             teamphysicalHP += 100;
             Debug.Log("Yeah Nice Intern but we underpay you!");
+            vfxAnimations.GetComponent<Animator>().Play("InternGood");
+            sfxAudioSource.clip = Intern01;
+            sfxAudioSource.Play();
         }
 
         bool physicalIsDead = bossUnit.bossTakePhysicalDamage(internUnit.physicalDamage);
@@ -796,6 +868,9 @@ public class BattleSystem : MonoBehaviour
         Debug.Log("Boss uses Skill 1");
         bossAttacking();
         //check if animation is running
+        vfxAnimations.GetComponent<Animator>().Play("BossAttack");
+        sfxAudioSource.clip = Boss01;
+        sfxAudioSource.Play();
         //deal both physical and magical damage for now
         bool isDead = soundUnit.TakePhysicalDamage(bossUnit.physicalDamage, this);
         bool summonisDead = summonUnit.TakeMagicalDamage(bossUnit.magicalDamage, this);
@@ -818,6 +893,9 @@ public class BattleSystem : MonoBehaviour
         Debug.Log("Boss uses Skill 2");
         //check if animation is running
         bossAttacking();
+        vfxAnimations.GetComponent<Animator>().Play("BossAttack");
+        sfxAudioSource.clip = BossHit02;
+        sfxAudioSource.Play();
         //deal double physical damage
         bool isDead = soundUnit.TakePhysicalDamage(bossUnit.physicalDamage * 2, this);
         bool summonisDead = summonUnit.TakeMagicalDamage(bossUnit.magicalDamage, this);
@@ -840,6 +918,9 @@ public class BattleSystem : MonoBehaviour
         Debug.Log("Boss uses Skill 3");
         //check if animation is running
         bossAttacking();
+        vfxAnimations.GetComponent<Animator>().Play("BossAttack");
+        sfxAudioSource.clip = BossHit01;
+        sfxAudioSource.Play();
         //deal double physical damage
         bool isDead = soundUnit.TakePhysicalDamage(bossUnit.physicalDamage, this);
         bool summonisDead = summonUnit.TakeMagicalDamage(bossUnit.magicalDamage *2, this);
@@ -1060,39 +1141,72 @@ public class BattleSystem : MonoBehaviour
     void updateBossHealth()
     {
         TeamHealth.value = teamphysicalHP;
+        SummonHealth.value = teamMagicalHP;
         //this is tracking the health of boss to the sliders
         if (bossUnit.currentPhysicalHP >= 300 & bossUnit.currentPhysicalHP <= 400)
         {
             bossHealth04.value = bossUnit.currentPhysicalHP;
+            if(bossUnit.currentPhysicalHP <320 & hostUnit.physicalDamage >= 20)
+            {
+                bossHealth04.value = 300;
+            }
         }
         if (bossUnit.currentPhysicalHP >= 200 & bossUnit.currentPhysicalHP <= 300)
         {
             bossHealth03.value = bossUnit.currentPhysicalHP;
+            if (bossUnit.currentPhysicalHP < 220 & hostUnit.physicalDamage >= 20)
+            {
+                bossHealth03.value = 200;
+            }
         }
         if (bossUnit.currentPhysicalHP >= 100 & bossUnit.currentPhysicalHP <= 200)
         {
             bossHealth02.value = bossUnit.currentPhysicalHP;
+            if (bossUnit.currentPhysicalHP < 120 & hostUnit.physicalDamage >= 20)
+            {
+                bossHealth02.value = 100;
+            }
         }
-        if (bossUnit.currentPhysicalHP >= 0 && bossUnit.currentPhysicalHP <= 100)
+         if (bossUnit.currentPhysicalHP >= 0 && bossUnit.currentPhysicalHP <= 100)
         {
-            bossHealth02.value = bossUnit.currentPhysicalHP;
+            bossHealth01.value = bossUnit.currentPhysicalHP;
+            if (bossUnit.currentPhysicalHP <20 & hostUnit.physicalDamage >= 20)
+            {
+                bossHealth01.value = 0;
+            }
         }
         //this is tracking the spirit health of boss to the sliders    
         if (bossUnit.currentMagicalHP >= 300 & bossUnit.currentMagicalHP <= 400)
         {
             bossSpirit04.value = bossUnit.currentMagicalHP;
+            if (bossUnit.currentMagicalHP < 320 & summonUnit.magicalDamage >= 20)
+            {
+                bossSpirit04.value = 300;
+            }
         }
         if (bossUnit.currentMagicalHP >= 200 & bossUnit.currentMagicalHP <= 300)
         {
             bossSpirit03.value = bossUnit.currentMagicalHP;
+            if (bossUnit.currentMagicalHP < 220 & summonUnit.magicalDamage >= 20)
+            {
+                bossSpirit03.value = 200;
+            }
         }
         if (bossUnit.currentMagicalHP >= 100 & bossUnit.currentMagicalHP <= 200)
         {
             bossSpirit02.value = bossUnit.currentMagicalHP;
+            if (bossUnit.currentMagicalHP < 120 & summonUnit.magicalDamage >= 20)
+            {
+                bossSpirit02.value = 100;
+            }
         }
         if (bossUnit.currentMagicalHP >= 0 && bossUnit.currentMagicalHP <= 100)
         {
             bossSpirit02.value = bossUnit.currentMagicalHP;
+            if (bossUnit.currentMagicalHP < 20 & summonUnit.magicalDamage >= 20)
+            {
+                bossSpirit01.value = 0;
+            }
         }
     }
 

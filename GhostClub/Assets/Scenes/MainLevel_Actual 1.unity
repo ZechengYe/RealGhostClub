@@ -2199,7 +2199,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &283153976
 RectTransform:
   m_ObjectHideFlags: 0
@@ -4647,7 +4647,6 @@ MonoBehaviour:
   bossSpirit03: {fileID: 1947193055}
   bossSpirit04: {fileID: 396506670}
   TeamHealth: {fileID: 185419434}
-  SummonHealth: {fileID: 2092724477}
   hostBattleStation: {fileID: 255025882}
   summonBattleStation: {fileID: 2110465397}
   directorBattleStation: {fileID: 206263677}
@@ -4679,15 +4678,7 @@ MonoBehaviour:
   summon01: {fileID: 8300000, guid: a01609732e6583d4294d8f4abd1b8b20, type: 3}
   summon02: {fileID: 8300000, guid: f08452d0f8d45fd4bb5310f766f4baf9, type: 3}
   director01: {fileID: 8300000, guid: 6760c8c9a85ea034dabd1652c197f7ae, type: 3}
-  Camera: {fileID: 8300000, guid: 3396fd96d7126c745bcea5d4349b10aa, type: 3}
-  Sound: {fileID: 8300000, guid: 8f6568dd7a63d2548a20666ac037ec01, type: 3}
-  Intern01: {fileID: 8300000, guid: 2a8564c44391cbe42b5517f71e27097b, type: 3}
-  Intern02: {fileID: 8300000, guid: 0c2f50089c0f38a4195bcd399bd0cf72, type: 3}
-  singlehit: {fileID: 8300000, guid: 440d607de99291f44a40b02fcb99d0d8, type: 3}
-  Boss01: {fileID: 8300000, guid: 141495b854f52b840ba6e710a7c8f095, type: 3}
-  Boss02: {fileID: 8300000, guid: 141495b854f52b840ba6e710a7c8f095, type: 3}
   BossHit01: {fileID: 8300000, guid: 98802c58e05003c499aa2a632cb94b59, type: 3}
-  BossHit02: {fileID: 8300000, guid: d81db6dbf6fc62c4da9a7ac6ddf40a6e, type: 3}
   DirectorBoard: {fileID: 1400206462}
   testingPrompts: {fileID: 2115313560}
   bossSpriteRenderer: {fileID: 0}
@@ -6271,7 +6262,7 @@ PrefabInstance:
     - target: {fileID: 1077396221327249550, guid: 991fa9e6dd2532b479302f8c403d291b,
         type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -9104,7 +9095,7 @@ Animator:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2092724474}
-  m_Enabled: 0
+  m_Enabled: 1
   m_Avatar: {fileID: 0}
   m_Controller: {fileID: 9100000, guid: ca4d8a3ca563245749253dd443153a0e, type: 2}
   m_CullingMode: 0
