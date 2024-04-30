@@ -163,6 +163,7 @@ public class BattleSystem : MonoBehaviour
                 if (isTurnStart)
                 {
                     UpdateUIText("It's Host's turn, Press Q/leftShoulder to open skill tree");
+                    GameManager.instance.turnStatus = TurnStatus.HostTurn;
                     isTurnStart = false;
                 }
 
@@ -473,7 +474,7 @@ public class BattleSystem : MonoBehaviour
         {
             TransitionToNextTurn();
         }
-            DamageMonitor();
+        DamageMonitor();
     }
     
     void HostComboAttack()
@@ -590,7 +591,7 @@ public class BattleSystem : MonoBehaviour
         {
             TransitionToNextTurn();
         }
-            DamageMonitor();   
+        DamageMonitor();   
     }
 
     void SoundSkill_A()
@@ -1062,7 +1063,7 @@ public class BattleSystem : MonoBehaviour
         {
             bossHealth02.value = bossUnit.currentPhysicalHP;
         }
-    //this is tracking the spirit health of boss to the sliders    
+        //this is tracking the spirit health of boss to the sliders    
         if (bossUnit.currentMagicalHP >= 300 & bossUnit.currentMagicalHP <= 400)
         {
             bossSpirit04.value = bossUnit.currentMagicalHP;

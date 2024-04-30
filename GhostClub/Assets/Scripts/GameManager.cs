@@ -5,10 +5,25 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.UIElements;
 
+// Defining enum for counting status of the turns
+public enum TurnStatus
+{
+    Start,
+    HostTurn, HostBranch,
+    SummonTurn, SummonBranch,
+    DirectorTurn, DirectorBranch,
+    SoundTurn, SoundBranch,
+    CameraTurn, CameraBranch,
+    InternTurn, InternBranch,
+    BossTurn
+}
+
 public class GameManager : MonoBehaviour
 {
+    // Singleton
     public static GameManager instance;
     
+    // For wiring up GameObjects in the scene
     public GameObject boss;
     public GameObject host;
     public GameObject summon;
@@ -16,6 +31,9 @@ public class GameManager : MonoBehaviour
     
     // For displaying Button-mapping 
     public GameObject buttonMapping;
+    
+    // For recording the turn state
+    public TurnStatus turnStatus = TurnStatus.Start;
 
     public bool isStarted = false;
 
@@ -41,9 +59,12 @@ public class GameManager : MonoBehaviour
         
         // Button Mapping 
         buttonMapping = GameObject.Find("ControlMaps");
-        //displayTutorial = GameObject.Find("DisplayTutorial").gameObject.GetComponent<Image>();
 
+        // Show the Tutorial of button mapping at the beginning of the game
         isStarted = false;
+        
+        // Resetting turn status
+        turnStatus = TurnStatus.Start;
     }
 
     // Update is called once per frame
