@@ -164,6 +164,9 @@ public class BattleSystem : MonoBehaviour
                 {
                     UpdateUIText("It's Host's turn, Press Q/leftShoulder to open skill tree");
                     GameManager.instance.turnStatus = TurnStatus.HostTurn;
+                    
+                    
+                    
                     isTurnStart = false;
                 }
 
@@ -177,6 +180,7 @@ public class BattleSystem : MonoBehaviour
                 if (isTurnStart)
                 {
                     UpdateUIText("left to use skill 1,right to use skill2, Left & Right Shoulder Combo when inspiration full");
+                    GameManager.instance.turnStatus = TurnStatus.HostBranch;
                     isTurnStart = false;
                 }
 
@@ -230,6 +234,7 @@ public class BattleSystem : MonoBehaviour
                 if (isTurnStart)
                 {
                     UpdateUIText("It's Director's turn, Press W/triangle to open skill tree");
+                    GameManager.instance.turnStatus = TurnStatus.DirectorTurn;
                     isTurnStart = false;
                 }
                 //just for now...to check if things work
@@ -393,10 +398,12 @@ public class BattleSystem : MonoBehaviour
 
             case BattleState.WON:
                 UpdateUIText("You Win The JRPG Battle!");
+                GameManager.instance.turnDisplay.enabled = false;
                 break;
 
             case BattleState.LOST:
                 UpdateUIText("You LOST!");
+                GameManager.instance.turnDisplay.enabled = false;
                 break;
         }
         if (shaketrue)
